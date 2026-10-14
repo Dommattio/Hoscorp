@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoscorp - Infraestructura Distribuida (Entrega 2)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="logo-badge">HC</div>
+        <div>
+          <h1>Hoscorp <span class="badge-tag">v1-infraestructura</span></h1>
+          <p class="subtitle">Gestión Unificada de Historias Clínicas · Entrega 2: Infraestructura</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="academic-tag">
+          <span class="label">Materia:</span> Programación Distribuida y Componentes
+        </div>
+        <div class="academic-tag">
+          <span class="label">Grupo:</span> N° 2 (Donato Mattio & Cristian Carilavi)
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="content-wrapper">
+
+      <!-- Nodes Physical Status Banner -->
+      <section class="section-card nodes-banner">
+        <div class="section-header">
+          <div>
+            <h2>Topología de Nodos Distribuidos</h2>
+            <p class="section-desc">Monitoreo en tiempo real de la separación física entre procesos/contenedores independientes.</p>
+          </div>
+          <div class="live-indicator">
+            <span class="pulse-dot"></span>
+            <span>Heartbeat activo (3s)</span>
+          </div>
+        </div>
+
+        <div class="nodes-grid">
+          <!-- Node 1: Backend -->
+          <div class="node-card" id="card-backend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N1]</span>
+                <div>
+                  <span class="node-number">Nodo 1 (Servidor)</span>
+                  <h3>Backend API Clínico</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-backend">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">clinical-records-service</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Host & Puerto:</span>
+                <span class="detail-value mono" id="backend-endpoint">localhost:5000</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Hostname Contenedor:</span>
+                <span class="detail-value mono" id="backend-hostname">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">PID / Proceso:</span>
+                <span class="detail-value mono" id="backend-pid">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Latencia RTT:</span>
+                <span class="detail-value mono" id="backend-latency">- ms</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Uptime:</span>
+                <span class="detail-value mono" id="backend-uptime">-</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Aislamiento: Contenedor Linux / Cgroups</span>
+            </div>
+          </div>
+
+          <!-- Network Bridge Link -->
+          <div class="network-connector">
+            <div class="cable-line"></div>
+            <div class="connector-box">
+              <span class="net-icon">&lt;-&gt;</span>
+              <span class="net-name mono">hoscorp-net</span>
+              <span class="net-proto">Docker Bridge / HTTP REST</span>
+            </div>
+            <div class="cable-line"></div>
+          </div>
+
+          <!-- Node 2: Frontend -->
+          <div class="node-card active" id="card-frontend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N2]</span>
+                <div>
+                  <span class="node-number">Nodo 2 (Cliente)</span>
+                  <h3>Portal Web Hoscorp</h3>
+                </div>
+              </div>
+              <span class="status-badge status-online" id="badge-frontend">ONLINE</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">web-portal (Nginx Alpine)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Host & Puerto:</span>
+                <span class="detail-value mono">localhost:3000 (HTTP)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Rol:</span>
+                <span class="detail-value">Interfaz Médica y Monitor de Salud</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Proxy Reverso:</span>
+                <span class="detail-value mono">/api/ -&gt; backend:5000</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Resiliencia:</span>
+                <span class="detail-value">Tolerante a caídas del Nodo 1</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Estado de Ejecución:</span>
+                <span class="detail-value">Independiente (Proceso Nginx)</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Aislamiento: Contenedor Linux / Cgroups</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Simulation Notice (Visible when backend goes down) -->
+        <div class="failure-alert hidden" id="backend-down-alert">
+          <div class="alert-icon">[!]</div>
+          <div class="alert-content">
+            <h4>Demostración de Aislamiento e Independencia Física</h4>
+            <p><strong>El Nodo 1 (Backend API) no responde o ha sido detenido.</strong> Sin embargo, el <strong>Nodo 2 (Frontend)</strong> sigue completamente operativo y prestando servicio web de forma independiente, comprobando que la separación entre procesos/contenedores es real.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Operational Area: Split Columns -->
+      <div class="operational-split">
+        
+        <!-- Left Column: Medical Records Management (Real Backend Business Logic) -->
+        <section class="section-card records-section">
+          <div class="section-header">
+            <div>
+              <h2>Gestión de Historias Clínicas (Datos Reales)</h2>
+              <p class="section-desc">Los datos se persisten en el volumen del Nodo 1 y se transmiten vía REST.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-refresh-records">
+              Actualizar Datos
+            </button>
+          </div>
+
+          <!-- Form to create record -->
+          <form id="record-form" class="record-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="input-paciente">Nombre del Paciente *</label>
+                <input type="text" id="input-paciente" required placeholder="Ej: Juan Pérez">
+              </div>
+
+              <div class="form-group">
+                <label for="input-dni">DNI / Identificación</label>
+                <input type="text" id="input-dni" placeholder="Ej: 35.123.456">
+              </div>
+
+              <div class="form-group">
+                <label for="input-centro">Centro de Salud *</label>
+                <select id="input-centro" required>
+                  <option value="Hospital Central de Córdoba">Hospital Central de Córdoba</option>
+                  <option value="Clínica Privada San Lucas">Clínica Privada San Lucas</option>
+                  <option value="Sanatorio Allende">Sanatorio Allende</option>
+                  <option value="Consultorio Dr. Funes">Consultorio Dr. Funes</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="input-profesional">Profesional Interviniente</label>
+                <input type="text" id="input-profesional" placeholder="Ej: Dra. Mariana López">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="input-diagnostico">Diagnóstico / Motivo de Consulta *</label>
+              <input type="text" id="input-diagnostico" required placeholder="Ej: Chequeo clínico anual, análisis de rutina normales">
+            </div>
+
+            <div class="form-group">
+              <label for="input-observaciones">Observaciones / Tratamiento</label>
+              <textarea id="input-observaciones" rows="2" placeholder="Indicaciones médicas, medicación prescrita o evolución..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="btn-submit-record">
+                Guardar Registro en Nodo Backend
+              </button>
+              <span class="form-status" id="form-feedback"></span>
+            </div>
+          </form>
+
+          <!-- Records List -->
+          <div class="records-container">
+            <div class="records-header">
+              <h3>Historial Unificado de Registros</h3>
+              <span class="records-count" id="records-count">Cargando registros...</span>
+            </div>
+
+            <div class="records-list" id="records-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Independence Proof & Technical Evidence -->
+        <aside class="side-column">
+          
+          <!-- Proof Checklist Card -->
+          <div class="section-card checklist-card">
+            <div class="section-header">
+              <h2>Checklist Entrega 2</h2>
+              <span class="tag-status">100% Cumplido</span>
+            </div>
+            <ul class="checklist-items">
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Dos nodos separados funcionando</strong>
+                  <p>Contenedores Docker independientes con sus propios Dockerfiles y procesos en ejecución.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Separación real comprobable</strong>
+                  <p>Cada nodo puede arrancarse, detenerse y escalarse de forma autónoma con Docker Compose.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Modelo de ejecución identificado</strong>
+                  <p>Arquitectura Cliente-Servidor distribuida / Microservicios orientada a dominio clínico.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Justificación del modelo</strong>
+                  <p>Soberanía del dato médico, desacoplamiento de interfaz y resiliencia ante contingencias.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>README con guía paso a paso</strong>
+                  <p>Instrucciones detalladas de despliegue local, pruebas de estrés y comandos de validación.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Interactive CLI Demonstration Commands -->
+          <div class="section-card cli-demo-card">
+            <div class="section-header">
+              <h2>Guía Rápida para el Docente</h2>
+              <span class="cli-chip">Pruebas en Vivo</span>
+            </div>
+            <p class="cli-intro">Ejecuta estos comandos en tu terminal para validar la independencia en tiempo real:</p>
+
+            <div class="cli-block">
+              <span class="cli-step">1. Detener solo el Nodo 1 (Backend):</span>
+              <code>docker compose stop backend</code>
+              <span class="cli-note">El frontend continúa vivo y el panel muestra el cambio de estado en vivo.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">2. Reactivar el Nodo 1:</span>
+              <code>docker compose start backend</code>
+              <span class="cli-note">El frontend detecta la reconexión instantánea sin necesidad de recargar la página.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">3. Probar el Backend sin Frontend:</span>
+              <code>docker compose stop frontend</code>
+              <code>curl http://localhost:5000/health</code>
+              <span class="cli-note">El Backend responde sus endpoints REST aún con el Frontend apagado.</span>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bottom-footer">
+      <div>
+        <strong>Hoscorp</strong> · Sistema Distribuido de Historias Clínicas · Entrega 2: Infraestructura
+      </div>
+      <div>
+        Programación Distribuida y Componentes — Grupo 2 · 2026
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

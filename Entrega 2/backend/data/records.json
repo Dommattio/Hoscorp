@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rec-1001",
+    "paciente": "Carlos Gómez",
+    "dni": "32.456.789",
+    "fecha": "2026-10-10",
+    "centroSalud": "Hospital Central de Córdoba",
+    "profesional": "Dra. Sofía Albarracín (Mat. 44521)",
+    "diagnostico": "Hipertensión arterial estadio 1",
+    "observaciones": "Control trimestral de presión. Se indica dieta hiposódica y enalapril 10mg."
+  },
+  {
+    "id": "rec-1002",
+    "paciente": "María Elena Walsh",
+    "dni": "28.112.334",
+    "fecha": "2026-10-12",
+    "centroSalud": "Clínica Privada San Lucas",
+    "profesional": "Dr. Fernando Morales (Mat. 39820)",
+    "diagnostico": "Traumatismo leve de muñeca izquierda",
+    "observaciones": "Radiografía sin signos de fractura ósea. Férula inmovilizadora por 7 días."
+  },
+  {
+    "id": "rec-1003",
+    "paciente": "Lucas Benítez",
+    "dni": "40.987.123",
+    "fecha": "2026-10-13",
+    "centroSalud": "Sanatorio Allende",
+    "profesional": "Dra. Lucía Torres (Mat. 50119)",
+    "diagnostico": "Faringitis aguda bacteriana",
+    "observaciones": "Exudado faríngeo positivo. Tratamiento con amoxicilina 875mg cada 12hs por 8 días."
+  }
+]
