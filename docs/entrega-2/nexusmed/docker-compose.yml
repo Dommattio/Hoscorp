@@ -1,0 +1,88 @@
+# NexusMed - Entrega 2: esqueleto distribuido (11 contenedores, un nodo físico).
+# Cada servicio se puede iniciar/detener por separado:  docker compose stop svc-pagos | docker compose start svc-pagos
+
+x-pg: &pg
+  image: postgres:16-alpine
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U nexus"]
+    interval: 5s
+    timeout: 3s
+    retries: 10
+
+services:
+  gateway:
+    image: nginx:1.27-alpine
+    ports: ["8080:80"]
+    volumes: ["./infrastructure/gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro"]
+    networks: [net-servicios, net-pagos]
+    restart: unless-stopped
+
+  svc-operativo:
+    build: ./services/operativo
+    environment:
+      DATABASE_URL: postgresql://nexus:nexus_dev@pg-operativo:5432/operativo
+    depends_on: { pg-operativo: { condition: service_healthy } }
+    networks: [net-servicios, net-db-operativo]
+    restart: unless-stopped
+
+  svc-historias-clinicas:
+    build: ./services/historias-clinicas
+    environment:
+      DATABASE_URL: postgresql://nexus:nexus_dev@pg-clinico:5432/clinico
+      REDIS_URL: redis://redis:6379/0
+      OPERATIVO_URL: http://svc-operativo:8001
+      HOSPITAL_URL: http://hospital-simulado:8004
+    depends_on:
+      pg-clinico: { condition: service_healthy }
+      redis: { condition: service_started }
+    networks: [net-servicios, net-db-clinico]
+    restart: unless-stopped
+
+  svc-pagos:
+    build: ./services/pagos
+    environment:
+      DATABASE_URL: postgresql://nexus:nexus_dev@pg-pagos:5432/pagos
+    depends_on: { pg-pagos: { condition: service_healthy } }
+    networks: [net-pagos, net-db-pagos]   # NO está en net-servicios ni en net-db-clinico
+    restart: unless-stopped
+
+  hospital-simulado:
+    build: ./services/hospital-simulado
+    networks: [net-servicios]
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    networks: [net-servicios]
+    restart: unless-stopped
+
+  pg-operativo:
+    <<: *pg
+    environment: { POSTGRES_USER: nexus, POSTGRES_PASSWORD: nexus_dev, POSTGRES_DB: operativo }
+    volumes: [pg_operativo:/var/lib/postgresql/data]
+    networks: [net-db-operativo]
+
+  pg-clinico:
+    <<: *pg
+    environment: { POSTGRES_USER: nexus, POSTGRES_PASSWORD: nexus_dev, POSTGRES_DB: clinico }
+    volumes: [pg_clinico:/var/lib/postgresql/data]
+    networks: [net-db-clinico]
+
+  pg-pagos:
+    <<: *pg
+    environment: { POSTGRES_USER: nexus, POSTGRES_PASSWORD: nexus_dev, POSTGRES_DB: pagos }
+    volumes: [pg_pagos:/var/lib/postgresql/data]
+    networks: [net-db-pagos]
+
+networks:
+  net-servicios: {}
+  net-pagos: {}
+  net-db-operativo: { internal: true }
+  net-db-clinico: { internal: true }
+  net-db-pagos: { internal: true }
+
+volumes:
+  pg_operativo:
+  pg_clinico:
+  pg_pagos:
