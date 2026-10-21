@@ -1,0 +1,14 @@
+{
+  "name": "hoscorp-notification-service",
+  "version": "1.0.0",
+  "description": "Hoscorp Notification and Audit Consumer Service - Canal Asincrono",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

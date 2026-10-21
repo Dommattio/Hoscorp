@@ -1,0 +1,124 @@
+# ==============================================================================
+# HOSCORP - PROGRAMACIÓN DISTRIBUIDA Y COMPONENTES
+# ENTREGA 3: COMUNICACIÓN SÍNCRONA, ASÍNCRONA Y SINCRONIZACIÓN DISTRIBUIDA
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # NODO 1: Message Broker RabbitMQ (Canal Asíncrono AMQP)
+  # Columna vertebral de mensajería desacoplada para eventos clínicos y auditoría
+  # ----------------------------------------------------------------------------
+  rabbitmq:
+    container_name: hoscorp-rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"     # Protocolo AMQP para comunicación asíncrona
+      - "15672:15672"   # Panel Web de Gestión RabbitMQ
+    networks:
+      - hoscorp-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ----------------------------------------------------------------------------
+  # NODO 2: Microservicio de Notificaciones y Auditoría (Consumidor Asíncrono)
+  # Procesa eventos emitidos por el núcleo clínico sin bloquear al emisor
+  # ----------------------------------------------------------------------------
+  notification-service:
+    container_name: hoscorp-notification-service
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_NAME=hoscorp-notification-service
+      - PORT=5001
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - NODE_ENV=production
+    networks:
+      - hoscorp-net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # ----------------------------------------------------------------------------
+  # NODO 3: Backend API Clínico (clinical-records-service)
+  # Núcleo clínico con endpoints REST síncronos, emisor AMQP y OCC de concurrencia
+  # ----------------------------------------------------------------------------
+  backend:
+    container_name: hoscorp-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_NAME=hoscorp-backend-clinical
+      - PORT=5000
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - NOTIFICATION_SERVICE_URL=http://notification-service:5001
+      - DATA_DIR=/data
+      - NODE_ENV=production
+    volumes:
+      - backend_data:/data
+    networks:
+      - hoscorp-net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      notification-service:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # ----------------------------------------------------------------------------
+  # NODO 4: Portal Web y Laboratorio Interactivo (Frontend Nginx)
+  # Proceso independiente en Nginx que sirve la UI y actúa de proxy reverso
+  # ----------------------------------------------------------------------------
+  frontend:
+    container_name: hoscorp-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - hoscorp-net
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
+
+# Red virtual bridge que interconecta todos los nodos en aislamiento
+networks:
+  hoscorp-net:
+    driver: bridge
+    name: hoscorp-net-e3
+
+# Volumen persistente para datos clínicos desacoplados del ciclo de vida del contenedor
+volumes:
+  backend_data:
+    name: hoscorp-backend-data-e3
