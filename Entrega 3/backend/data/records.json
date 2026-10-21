@@ -1,0 +1,38 @@
+[
+  {
+    "id": "rec-1001",
+    "version": 1,
+    "paciente": "Carlos Gomez",
+    "dni": "32.456.789",
+    "fecha": "2026-10-10",
+    "centroSalud": "Hospital Central de Cordoba",
+    "profesional": "Dra. Sofia Albarracin (Mat. 44521)",
+    "diagnostico": "Hipertension arterial estadio 1",
+    "observaciones": "Control trimestral de presion. Se indica dieta hiposodica y enalapril 10mg.",
+    "updatedAt": "2026-10-10T14:30:00.000Z"
+  },
+  {
+    "id": "rec-1002",
+    "version": 1,
+    "paciente": "Maria Elena Walsh",
+    "dni": "28.112.334",
+    "fecha": "2026-10-12",
+    "centroSalud": "Clinica Privada San Lucas",
+    "profesional": "Dr. Fernando Morales (Mat. 39820)",
+    "diagnostico": "Traumatismo leve de muneca izquierda",
+    "observaciones": "Radiografia sin signos de fractura osea. Ferula inmovilizadora por 7 dias.",
+    "updatedAt": "2026-10-12T09:15:00.000Z"
+  },
+  {
+    "id": "rec-1003",
+    "version": 1,
+    "paciente": "Juan Perez",
+    "dni": "35.889.012",
+    "fecha": "2026-10-15",
+    "centroSalud": "Centro Medico San Martin",
+    "profesional": "Dr. Martin Palermo (Mat. 51203)",
+    "diagnostico": "Chequeo clinico preventivo",
+    "observaciones": "Valores de laboratorio dentro de rangos normales. Proximo control anual.",
+    "updatedAt": "2026-10-15T11:00:00.000Z"
+  }
+]

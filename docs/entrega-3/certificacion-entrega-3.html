@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificacion de Entrega - Entrega 3: Comunicacion sincrona y asincrona</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 20mm 18mm 20mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      background: #f3f4f6;
+      line-height: 1.35;
+      font-size: 11pt;
+    }
+
+    .page {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 22mm 22mm;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+
+    .print-bar {
+      max-width: 210mm;
+      margin: 15px auto 0 auto;
+      padding: 10px 20px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .print-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Header styling */
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .course-title {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .page-number {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .cert-title {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 10px;
+      line-height: 1.25;
+    }
+
+    .module-subtitle {
+      font-size: 12pt;
+      font-style: italic;
+      color: #3b82f6;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #1e3a8a;
+      margin: 10px 0 14px 0;
+    }
+
+    .description-text {
+      font-size: 9.5pt;
+      color: #374151;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* Yellow evaluation box */
+    .eval-box {
+      background-color: #fefce8;
+      border: 1px solid #ca8a04;
+      border-radius: 2px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 9pt;
+      color: #854d0e;
+      line-height: 1.35;
+    }
+
+    .eval-box strong {
+      color: #713f12;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    /* General Data Section */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-size: 9pt;
+    }
+
+    .data-table td {
+      padding: 4px 0;
+      border-bottom: 1px dotted #9ca3af;
+    }
+
+    .data-label {
+      width: 25%;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .data-value {
+      width: 75%;
+      color: #111827;
+    }
+
+    /* Checklist Table */
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      font-size: 8.5pt;
+    }
+
+    .checklist-table th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .checklist-table td {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+      line-height: 1.3;
+    }
+
+    .col-req {
+      width: 32%;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .col-check {
+      width: 12%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .col-just {
+      width: 56%;
+      color: #334155;
+    }
+
+    .checkbox-box {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid #1e3a8a;
+      margin-right: 3px;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 11px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .checkbox-checked {
+      background-color: #1e3a8a;
+      color: #fff;
+    }
+
+    /* Evidence Box */
+    .evidence-box {
+      border: 1px dashed #94a3b8;
+      background-color: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+      line-height: 1.35;
+      color: #334155;
+      margin-top: 6px;
+    }
+
+    .evidence-box code {
+      font-family: 'JetBrains Mono', Courier, monospace;
+      background: #e2e8f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8pt;
+      color: #0f172a;
+    }
+
+    /* Footer text */
+    .page-footer {
+      position: absolute;
+      bottom: 16mm;
+      left: 22mm;
+      right: 22mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+    }
+
+    /* Page 2 Specifics */
+    .docente-box {
+      border: 1px dashed #94a3b8;
+      background-color: #fafafa;
+      min-height: 160px;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      color: #6b7280;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Print Toolbar (Hidden on print) -->
+  <div class="print-bar no-print">
+    <div>
+      <strong>Certificacion Oficial de Entrega 3</strong> - Lista para imprimir o guardar como PDF
+    </div>
+    <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF (Ctrl + P)</button>
+  </div>
+
+  <!-- ==================== PAGINA 1 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes - Proyecto Final</span>
+      <span class="page-number">Pagina 1</span>
+    </div>
+
+    <h1 class="cert-title">Certificacion de Entrega - Entrega 3: Comunicacion sincrona y asincrona</h1>
+    <h2 class="module-subtitle">Modulo 3 - Comunicacion y sincronizacion en sistemas distribuidos</h2>
+
+    <hr class="divider">
+
+    <p class="description-text">
+      Aca se agrega un canal sincrono y otro asincrono entre componentes del sistema, mas la resolucion demostrable de un caso de concurrencia (por ejemplo, dos escrituras simultaneas sobre el mismo recurso).
+    </p>
+
+    <div class="eval-box">
+      <strong>Que evalua esta entrega:</strong> Que el grupo entienda cuando corresponde cada semantica de comunicacion, no solo que el sistema "funcione".
+    </div>
+
+    <h3 class="section-title">Datos generales</h3>
+    <table class="data-table">
+      <tr>
+        <td class="data-label">Grupo N°:</td>
+        <td class="data-value"><strong>Grupo 2</strong> (Donato Mattio &amp; Cristian Carilavi)</td>
+      </tr>
+      <tr>
+        <td class="data-label">Tag / Release de esta entrega:</td>
+        <td class="data-value"><code>v1-comunicacion</code></td>
+      </tr>
+      <tr>
+        <td class="data-label">Fecha de entrega:</td>
+        <td class="data-value">21/10/2026</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Checklist de la entrega</h3>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th class="col-req">Requisito de la entrega</th>
+          <th class="col-check">Cumple</th>
+          <th class="col-just">Justificacion breve / evidencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-req">Hay un canal de comunicacion sincrono funcionando entre componentes (ej. REST/gRPC).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Implementado mediante <strong>HTTP/REST</strong>. Opera entre el Frontend y el Backend Clinico (<code>GET /api/records</code>, <code>PUT /api/records/:id</code>) y mediante llamada sincrona directa inter-servicio entre Backend y Notificaciones (<code>GET /api/records/:id/sync-audit-check</code> -&gt; <code>/api/validate-audit</code>).
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Hay un canal de comunicacion asincrono funcionando entre componentes (ej. cola de mensajes).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Implementado mediante <strong>RabbitMQ (AMQP :5672)</strong> con Topic Exchange <code>hoscorp.events</code> y cola durable <code>hoscorp.notifications.queue</code>. El backend emite eventos (<code>clinical.record.created</code>, <code>clinical.record.updated</code>, <code>clinical.record.conflict</code>) consumidos por el worker en background.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Esta justificado por que se uso cada semantica en cada punto del sistema.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            <strong>Sincrono:</strong> Para lectura inmediata y confirmacion transaccional critica donde el usuario medico requiere certeza de consistencia.<br>
+            <strong>Asincrono:</strong> Para auditoria inmutable, alertas y desacoplamiento temporal de tareas lentas que no deben degradar la atencion medica.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Se identifico un caso de concurrencia concreto (ej. dos escrituras simultaneas sobre el mismo recurso).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Anomalia de <strong>Actualizacion Perdida (Lost Update)</strong> en historias clinicas: dos facultativos (o sincronizacion automatica y medico) modifican simultaneamente el diagnostico del mismo paciente sobre la misma version base (<code>rec-1001</code>).
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Ese caso de concurrencia esta resuelto y la solucion puede demostrarse (no solo descripta).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Resuelto con <strong>Control de Concurrencia Optimista (OCC)</strong> con versionado numerico. La primera escritura avanza a version 2 (200 OK); la segunda colisiona con version obsoleta y es rechazada con <strong>HTTP 409 Conflict</strong>. Demostrable por script y por UI.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-title">Evidencia adicional</h3>
+    <p style="font-size: 8.5pt; font-weight: 600; color: #1f2937;">Como reproducir el caso de concurrencia resuelto (pasos o script de prueba):</p>
+    <div class="evidence-box">
+      <strong>1. Por consola con script automatizado:</strong> Ejecutar en terminal <code>.\scripts\test-concurrencia.ps1</code> o <code>node .\scripts\test-concurrencia.js</code>. Retorna Hilo 1: <code>200 OK</code> e Hilo 2: <code>409 Conflict</code>.<br>
+      <strong>2. Por interfaz web interactiva:</strong> Abrir <a href="http://localhost:3000" style="color: #0284c7;">http://localhost:3000</a> y presionar el boton <em>"Ejecutar 2 Escrituras Simultaneas"</em> en el panel de Concurrencia.<br>
+      <strong>3. Documentacion completa:</strong> Consultar <code>docs/informe-tecnico-comunicacion-concurrencia.md</code> y <code>docs/checklist-entrega3.md</code>.
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes - Proyecto Final - 1</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGINA 2 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes - Proyecto Final</span>
+      <span class="page-number">Pagina 2</span>
+    </div>
+
+    <h2 class="section-title" style="font-size: 13pt; margin-top: 10px; color: #1e3a8a;">Espacio para el docente</h2>
+    <hr class="divider">
+
+    <table class="data-table" style="margin-top: 15px; margin-bottom: 20px;">
+      <tr>
+        <td class="data-label" style="width: 30%;">Nota:</td>
+        <td class="data-value">________ / 10</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Corregido por:</td>
+        <td class="data-value">Completar</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Fecha de correccion:</td>
+        <td class="data-value">dd/mm/aaaa</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Observaciones:</h3>
+    <div class="docente-box">
+      Espacio para comentarios del docente
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px dotted #cbd5e1; padding-top: 15px; font-size: 8.5pt; color: #64748b;">
+      <p><strong>Resumen de artefactos tecnicos provistos para evaluacion:</strong></p>
+      <ul style="margin-left: 18px; margin-top: 6px; line-height: 1.5;">
+        <li><code>docker-compose.yml</code>: Orquestacion integral de 4 contenedores (Backend, RabbitMQ, Worker Notificaciones, Frontend Nginx).</li>
+        <li><code>backend/src/server.js</code>: Implementacion del motor OCC (versionado numerico, HTTP 409) y productor AMQP.</li>
+        <li><code>notification-service/src/server.js</code>: Consumidor AMQP de eventos desacoplados y bitacora de auditoria.</li>
+        <li><code>frontend/src/index.html</code>: Panel interactivo con laboratorio de concurrencia y monitor en vivo.</li>
+        <li><code>scripts/test-concurrencia.ps1</code>: Script automatizado de reproduccion en tiempo real.</li>
+      </ul>
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes - Proyecto Final - 2</span>
+    </div>
+  </div>
+
+</body>
+</html>

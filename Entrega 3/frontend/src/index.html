@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoscorp - Comunicacion y Sincronizacion Distribuida (Entrega 3)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="logo-badge">HC</div>
+        <div>
+          <h1>Hoscorp <span class="badge-tag">v1-comunicacion</span></h1>
+          <p class="subtitle">Gestion Unificada de Historias Clinicas · Entrega 3: Comunicacion sincrona y asincrona</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="academic-tag">
+          <span class="label">Materia:</span> Programacion Distribuida y Componentes
+        </div>
+        <div class="academic-tag">
+          <span class="label">Grupo:</span> N° 2 (Donato Mattio &amp; Cristian Carilavi)
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="content-wrapper">
+
+      <!-- Nodes Physical Status Banner -->
+      <section class="section-card nodes-banner">
+        <div class="section-header">
+          <div>
+            <h2>Topologia de Componentes y Canales Distribuidos</h2>
+            <p class="section-desc">Monitoreo en tiempo real de canales sincronos (REST) y asincronos (RabbitMQ AMQP) entre componentes desacoplados.</p>
+          </div>
+          <div class="live-indicator">
+            <span class="pulse-dot"></span>
+            <span>Heartbeat activo (3s)</span>
+          </div>
+        </div>
+
+        <div class="nodes-grid">
+          <!-- Node 1: Backend Clinico Core -->
+          <div class="node-card" id="card-backend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N1]</span>
+                <div>
+                  <span class="node-number">Nodo 1 (Core Clinico)</span>
+                  <h3>Backend API y Motor OCC</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-backend">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">clinical-records-service</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Host &amp; Puerto:</span>
+                <span class="detail-value mono">localhost:5000</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Canal Sincrono:</span>
+                <span class="detail-value mono">HTTP REST (/api/records)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Concurrencia:</span>
+                <span class="detail-value mono">OCC con Versionado</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Latencia RTT:</span>
+                <span class="detail-value mono" id="backend-latency">- ms</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Uptime:</span>
+                <span class="detail-value mono" id="backend-uptime">-</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Productor AMQP / Persistencia en Volumen</span>
+            </div>
+          </div>
+
+          <!-- Message Broker: RabbitMQ -->
+          <div class="node-card" id="card-rabbitmq">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[MQ]</span>
+                <div>
+                  <span class="node-number">Message Broker</span>
+                  <h3>RabbitMQ Distributed Broker</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-rabbitmq">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Protocolo:</span>
+                <span class="detail-value mono">AMQP 0-9-1 (:5672)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Exchange:</span>
+                <span class="detail-value mono">hoscorp.events (Topic)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Cola Principal:</span>
+                <span class="detail-value mono">hoscorp.notifications.queue</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Routing Pattern:</span>
+                <span class="detail-value mono">clinical.#</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Panel Gestion:</span>
+                <span class="detail-value mono">localhost:15672</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Canal Asincrono Desacoplado</span>
+            </div>
+          </div>
+
+          <!-- Node 2: Notification & Audit Service -->
+          <div class="node-card" id="card-notification">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N2]</span>
+                <div>
+                  <span class="node-number">Nodo 2 (Worker Asincrono)</span>
+                  <h3>Notificaciones y Auditoria</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-notification">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">notification-service (:5001)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Rol:</span>
+                <span class="detail-value">Consumidor AMQP en Background</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Tolerancia a Fallos:</span>
+                <span class="detail-value">Cola Durable con Ack</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Eventos Procesados:</span>
+                <span class="detail-value mono" id="notification-msg-count">0</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Uptime:</span>
+                <span class="detail-value mono" id="notification-uptime">-</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Consumidor AMQP / API Sincrona de Auditoria</span>
+            </div>
+          </div>
+
+          <!-- Node 3: Frontend Web Portal -->
+          <div class="node-card active" id="card-frontend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N3]</span>
+                <div>
+                  <span class="node-number">Nodo 3 (Cliente / UI)</span>
+                  <h3>Portal Web Hoscorp</h3>
+                </div>
+              </div>
+              <span class="status-badge status-online" id="badge-frontend">ONLINE</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">web-portal (Nginx Alpine)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Host &amp; Puerto:</span>
+                <span class="detail-value mono">localhost:3000 (HTTP)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Proxy Reverso:</span>
+                <span class="detail-value mono">/api/ -&gt; backend:5000</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Proxy Notificaciones:</span>
+                <span class="detail-value mono">/api/notifications/ -&gt; :5001</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Laboratorio OCC:</span>
+                <span class="detail-value">Simulacion de 2 Escrituras</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Aislamiento: Contenedor Nginx Alpine</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Simulation Notice -->
+        <div class="failure-alert hidden" id="backend-down-alert">
+          <div class="alert-icon">[!]</div>
+          <div class="alert-content">
+            <h4>Alerta de Disponibilidad de Nodos</h4>
+            <p>Uno o mas componentes del sistema no responden. Sin embargo, el portal web sigue atendiendo peticiones demostrando el desacoplamiento y la tolerancia a fallos entre contenedores.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Operational Area: Split Columns -->
+      <div class="operational-split">
+        
+        <!-- Left Column: Operations, Concurrency Lab, Records and RabbitMQ Feed -->
+        <div class="main-column">
+          
+          <!-- Section 1: Concurrency Laboratory (OCC) -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Laboratorio de Concurrencia: Dos Escrituras Simultaneas</h2>
+                <p class="section-desc">Resolucion demostrable del problema de actualizacion perdida (Lost Update) mediante Control de Concurrencia Optimista (OCC).</p>
+              </div>
+              <span class="status-badge status-warning">Demostracion Empirica</span>
+            </div>
+
+            <div class="lab-card">
+              <p class="lab-desc">
+                Dos profesionales intentan modificar simultaneamente la misma historia clinica habiendo leido la misma version base. Con OCC, una transaccion avanza la version a <strong>V+1 (HTTP 200 OK)</strong>, mientras la segunda detecta que su version es obsoleta y es rechazada preventivamente con <strong>HTTP 409 Conflict</strong>, preservando los datos clinicos.
+              </p>
+
+              <div class="lab-controls">
+                <div>
+                  <label class="control-label" for="select-target-record">Registro Objetivo:</label>
+                  <select id="select-target-record" class="mono" onchange="handleTargetRecordChange()">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+
+                <div>
+                  <span class="control-label">Estado en BD:</span>
+                  <span id="current-version-tag" class="version-pill">Cargando...</span>
+                </div>
+
+                <div style="margin-left: auto; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-accent" id="btn-run-race" onclick="executeConcurrentWrites()">
+                    Ejecutar 2 Escrituras Simultaneas
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="testSyncInterServiceCall()">
+                    Probar Sincrono Inter-Servicio
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetSeedRecords()">
+                    Restablecer Semilla
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Parallel Output -->
+              <div class="lab-split-view">
+                <!-- Thread 1 -->
+                <div class="thread-card idle" id="card-thread-1">
+                  <div class="thread-card-header">
+                    <span>Hilo 1: Dra. Gomez (Cardiologia)</span>
+                    <span class="status-badge" id="badge-thread-1">En espera</span>
+                  </div>
+                  <pre class="thread-code" id="code-thread-1">Presiona "Ejecutar 2 Escrituras Simultaneas" para disparar la prueba concurrente en vivo.</pre>
+                </div>
+
+                <!-- Thread 2 -->
+                <div class="thread-card idle" id="card-thread-2">
+                  <div class="thread-card-header">
+                    <span>Hilo 2: Dr. Ramirez (Clinica Medica)</span>
+                    <span class="status-badge" id="badge-thread-2">En espera</span>
+                  </div>
+                  <pre class="thread-code" id="code-thread-2">Presiona "Ejecutar 2 Escrituras Simultaneas" para disparar la prueba concurrente en vivo.</pre>
+                </div>
+              </div>
+
+              <div id="concurrency-verdict" class="verdict-box" style="display: none;"></div>
+              <div id="sync-test-output" style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);"></div>
+            </div>
+          </section>
+
+          <!-- Section 2: Medical Records Management -->
+          <section class="section-card records-section">
+            <div class="section-header">
+              <div>
+                <h2>Gestion de Historias Clinicas (Canal Sincrono REST)</h2>
+                <p class="section-desc">Carga y actualizacion con versionado numerico para garantizar control transaccional.</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btn-refresh-records" onclick="loadRecords()">
+                Actualizar Datos
+              </button>
+            </div>
+
+            <!-- Form to create record -->
+            <form id="record-form" class="record-form" onsubmit="handleCreateRecord(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="input-paciente">Nombre del Paciente *</label>
+                  <input type="text" id="input-paciente" required placeholder="Ej: Juan Perez">
+                </div>
+
+                <div class="form-group">
+                  <label for="input-dni">DNI / Identificacion</label>
+                  <input type="text" id="input-dni" placeholder="Ej: 35.123.456">
+                </div>
+
+                <div class="form-group">
+                  <label for="input-centro">Centro de Salud *</label>
+                  <select id="input-centro" required>
+                    <option value="Hospital Central de Cordoba">Hospital Central de Cordoba</option>
+                    <option value="Clinica Privada San Lucas">Clinica Privada San Lucas</option>
+                    <option value="Sanatorio Allende">Sanatorio Allende</option>
+                    <option value="Centro Medico San Martin">Centro Medico San Martin</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-profesional">Profesional Interviniente</label>
+                  <input type="text" id="input-profesional" placeholder="Ej: Dra. Mariana Lopez">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input-diagnostico">Diagnostico / Motivo de Consulta *</label>
+                <input type="text" id="input-diagnostico" required placeholder="Ej: Chequeo clinico preventivo de rutina">
+              </div>
+
+              <div class="form-group">
+                <label for="input-observaciones">Observaciones / Tratamiento</label>
+                <textarea id="input-observaciones" rows="2" placeholder="Indicaciones medicas, medicacion prescrita o evolucion..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-submit-record">
+                  Guardar Registro en Nodo Backend
+                </button>
+                <span class="form-status" id="form-feedback"></span>
+              </div>
+            </form>
+
+            <!-- Records List -->
+            <div class="records-container">
+              <div class="records-header">
+                <h3>Historial Unificado de Registros</h3>
+                <span class="records-count" id="records-count">Cargando registros...</span>
+              </div>
+
+              <div class="records-list" id="records-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 3: RabbitMQ Asynchronous Audit Feed -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Bitacora de Eventos Asincronos (Consumidor RabbitMQ)</h2>
+                <p class="section-desc">Eventos consumidos en segundo plano por el Notification Service via cola durable.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" onclick="loadAuditLogs()">Refrescar Cola</button>
+                <button class="btn btn-danger-sm" onclick="clearAuditLogs()">Limpiar Bitacora</button>
+              </div>
+            </div>
+
+            <div class="audit-container">
+              <div class="audit-list" id="audit-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Right Column: Checklist & Technical Evidence -->
+        <aside class="side-column">
+          
+          <!-- Proof Checklist Card -->
+          <div class="section-card checklist-card">
+            <div class="section-header">
+              <h2>Checklist Entrega 3</h2>
+              <span class="tag-status">100% Cumplido</span>
+            </div>
+            <ul class="checklist-items">
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Canal de comunicacion sincrono funcionando</strong>
+                  <p>HTTP/REST entre Frontend y Backend Clinico, mas llamada sincrona inter-servicio de validacion de auditoria.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Canal de comunicacion asincrono funcionando</strong>
+                  <p>Message broker RabbitMQ (AMQP :5672) con Topic Exchange "hoscorp.events" y worker consumidor.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Semantica justificada en cada punto</strong>
+                  <p>Sincrono para inmediatez y consistencia clinica; Asincrono para desacoplar alertas y bitacoras de auditoria.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Caso de concurrencia concreto identificado</strong>
+                  <p>Dos escrituras simultaneas sobre el mismo registro medico que causarian anomalia Lost Update.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Caso de concurrencia resuelto y demostrable</strong>
+                  <p>Optimistic Concurrency Control (OCC) con versionado numerico: exito en una escritura (200) y rechazo en la obsoleta (409).</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Interactive CLI Demonstration Commands -->
+          <div class="section-card cli-demo-card">
+            <div class="section-header">
+              <h2>Guia Rapida para el Docente</h2>
+              <span class="cli-chip">Pruebas en Vivo</span>
+            </div>
+            <p class="cli-intro">Ejecuta estos comandos en tu terminal para validar los canales y la concurrencia en tiempo real:</p>
+
+            <div class="cli-block">
+              <span class="cli-step">1. Prueba automatizada de concurrencia (OCC):</span>
+              <code>.\scripts\test-concurrencia.ps1</code>
+              <span class="cli-note">Dispara dos escrituras simultaneas y valida codigos HTTP 200 OK y 409 Conflict.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">2. Demostracion integral de los 5 requisitos:</span>
+              <code>.\scripts\demo-completa.ps1</code>
+              <span class="cli-note">Prueba secuencial de canal sincrono, canal asincrono RabbitMQ y OCC.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">3. Probar llamada sincrona inter-servicio:</span>
+              <code>curl http://localhost:5000/api/records/rec-1001/sync-audit-check</code>
+              <span class="cli-note">El backend consulta de forma bloqueante al servicio de notificaciones.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">4. Consultar bitacora asincrona en RabbitMQ:</span>
+              <code>curl http://localhost:5001/api/audit-logs</code>
+              <span class="cli-note">Muestra los eventos capturados y procesados por el worker.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">5. Panel Web de RabbitMQ:</span>
+              <code>http://localhost:15672 (guest / guest)</code>
+              <span class="cli-note">Muestra las metricas en vivo de exchanges, colas y tasa de mensajes.</span>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bottom-footer">
+      <div>
+        <strong>Hoscorp</strong> · Sistema Centralizado de Historias Clinicas · Entrega 3: Comunicacion sincrona y asincrona
+      </div>
+      <div>
+        Programacion Distribuida y Componentes — Grupo 2 · 2026
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
