@@ -4,7 +4,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Estado de Entrega](https://img.shields.io/badge/Entrega-3%20(Actual)-blue.svg)](#plan-de-entregas)
+[![Estado de Entrega](https://img.shields.io/badge/Entrega-4%20(Actual)-blue.svg)](#plan-de-entregas)
 
 ---
 
@@ -62,17 +62,21 @@ hoscorp/
 ├── Entrega 1/
 ├── Entrega 2/
 ├── Entrega 3/
-│   ├── backend/                 # API REST clínica y productor AMQP
-│   ├── notification-service/    # Consumidor asíncrono y auditoría
-│   ├── frontend/                # Portal Web y Laboratorio OCC
-│   ├── scripts/                 # Scripts de prueba y automatización
+├── Entrega 4/
+│   ├── service-registry/        # Servidor de Descubrimiento (Auto-registro, TTL y Lookup)
+│   ├── backend/                 # Core clínico con Adaptador de Contrato y Hot-Swap V1/V2
+│   ├── notification-service/    # Servicio de auditoría auto-registrado y consumidor AMQP
+│   ├── frontend/                # Portal Web, Directorio Discovery y Visor OpenAPI 3.0
+│   ├── contracts/               # Especificaciones OpenAPI 3.0.3 (YAML) y Postman v2.1
+│   ├── scripts/                 # Scripts automatizados de Contract Testing y Discovery
 │   ├── docs/                    # Checklist oficial, informe y certificación imprimible
-│   ├── docker-compose.yml       # Orquestación con RabbitMQ
-│   └── README.md                # Documentación detallada de Entrega 3
+│   ├── docker-compose.yml       # Orquestación de 5 nodos sin URLs hardcodeadas
+│   └── README.md                # Documentación detallada de Entrega 4
 ├── docs/
 │   ├── entrega-1/
 │   ├── entrega-2/
-│   └── entrega-3/
+│   ├── entrega-3/
+│   └── entrega-4/
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -86,8 +90,8 @@ hoscorp/
 |:--:|:---------------|:------------------------------|:------:|:-------|
 | 1 | Entrega 1 | Propuesta inicial y arquitectura de software (Modelo de Vistas 4+1) | Completado | [Ver Entrega 1](./Entrega%201/README.md) |
 | 2 | Entrega 2 | Arquitectura de Infraestructura: Nodos físicamente separados | Completado | [Ver Entrega 2](./Entrega%202/README.md) |
-| **3** | **Entrega 3** | **Comunicación síncrona, asíncrona (RabbitMQ) y concurrencia (OCC)** | **Actual / Completo** | [Ver Entrega 3](./Entrega%203/README.md) |
-| 4 | Entrega 4 | Núcleo clínico: Ingesta por API y módulo de interfaz médica manual | Planificado | - |
+| 3 | Entrega 3 | Comunicación síncrona, asíncrona (RabbitMQ) y concurrencia (OCC) | Completado | [Ver Entrega 3](./Entrega%203/README.md) |
+| **4** | **Entrega 4** | **Contratos de interfaz explícitos (OpenAPI 3.0) y Service Discovery** | **Actual / Completo** | [Ver Entrega 4](./Entrega%204/README.md) |
 | 5 | Entrega 5 | Microservicio de pagos desacoplado e integraciones externas | Planificado | - |
 | 6 | Entrega 6 | Pruebas de integración, resiliencia, seguridad y rendimiento | Planificado | - |
 | 7 | Entrega 7 | Despliegue productivo, monitoreo, documentación final y cierre | Planificado | - |
@@ -100,13 +104,14 @@ Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICE
 
 ---
 
-## Documentación de la Entrega 3 (Actual)
+## Documentación de la Entrega 4 (Actual)
 
 | Documento | Descripción |
 |-----------|-------------|
-| [Checklist Oficial Entrega 3](./Entrega%203/docs/checklist-entrega3.md) | Checklist completado con justificaciones y evidencia del Módulo 3 |
-| [Informe Técnico de Comunicación y Concurrencia](./Entrega%203/docs/informe-tecnico-comunicacion-concurrencia.md) | Documento detallado con análisis teórico, diagramas y resolución OCC |
-| [Certificación Imprimible Entrega 3 (HTML / PDF)](./Entrega%203/docs/certificacion-entrega-3.html) | Plantilla idéntica a la hoja oficial de cátedra para imprimir a PDF (Ctrl + P) |
+| [Checklist Oficial Entrega 4](./Entrega%204/docs/checklist-entrega4.md) | Checklist completado con justificaciones y evidencia del Módulo 4 |
+| [Informe Técnico de Contratos y Service Discovery](./Entrega%204/docs/informe-tecnico-contratos-discovery.md) | Documento detallado con diagramas de secuencia, patrón Adapter y OpenAPI |
+| [Certificación Imprimible Entrega 4 (HTML / PDF)](./Entrega%204/docs/certificacion-entrega-4.html) | Plantilla idéntica a la hoja oficial de cátedra para imprimir a PDF (Ctrl + P) |
+| [Colección Oficial de Postman v2.1](./Entrega%204/contracts/hoscorp-entrega4.postman_collection.json) | Colección importable con pruebas de contrato y Service Discovery |
 
 ---
 

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificacion de Entrega - Entrega 4: Contratos de interfaz y descubrimiento de servicios</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 20mm 18mm 20mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      background: #f3f4f6;
+      line-height: 1.35;
+      font-size: 11pt;
+    }
+
+    .page {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 22mm 22mm;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+
+    .print-bar {
+      max-width: 210mm;
+      margin: 15px auto 0 auto;
+      padding: 10px 20px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .print-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .course-title {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .page-number {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .cert-title {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 10px;
+      line-height: 1.25;
+    }
+
+    .module-subtitle {
+      font-size: 12pt;
+      font-style: italic;
+      color: #3b82f6;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #1e3a8a;
+      margin: 10px 0 14px 0;
+    }
+
+    .description-text {
+      font-size: 9.5pt;
+      color: #374151;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .eval-box {
+      background-color: #fefce8;
+      border: 1px solid #ca8a04;
+      border-radius: 2px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 9pt;
+      color: #854d0e;
+      line-height: 1.35;
+    }
+
+    .eval-box strong {
+      color: #713f12;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-size: 9pt;
+    }
+
+    .data-table td {
+      padding: 4px 0;
+      border-bottom: 1px dotted #9ca3af;
+    }
+
+    .data-label {
+      width: 28%;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .data-value {
+      width: 72%;
+      color: #111827;
+    }
+
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      font-size: 8.5pt;
+    }
+
+    .checklist-table th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .checklist-table td {
+      padding: 7px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+      line-height: 1.32;
+    }
+
+    .col-req {
+      width: 32%;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .col-check {
+      width: 12%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .col-just {
+      width: 56%;
+      color: #334155;
+    }
+
+    .checkbox-box {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid #1e3a8a;
+      margin-right: 3px;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 11px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .checkbox-checked {
+      background-color: #1e3a8a;
+      color: #fff;
+    }
+
+    .evidence-box {
+      border: 1px dashed #94a3b8;
+      background-color: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      color: #334155;
+      margin-top: 6px;
+    }
+
+    .evidence-box code {
+      font-family: 'JetBrains Mono', Courier, monospace;
+      background: #e2e8f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8pt;
+      color: #0f172a;
+    }
+
+    .page-footer {
+      position: absolute;
+      bottom: 16mm;
+      left: 22mm;
+      right: 22mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+    }
+
+    .docente-box {
+      border: 1px dashed #94a3b8;
+      background-color: #fafafa;
+      min-height: 160px;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      color: #6b7280;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-bar no-print">
+    <div>
+      <strong>Certificacion Oficial de Entrega 4</strong> - Lista para imprimir o guardar como PDF
+    </div>
+    <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF (Ctrl + P)</button>
+  </div>
+
+  <!-- ==================== PAGINA 1 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes · Proyecto Final</span>
+      <span class="page-number">Pagina 1</span>
+    </div>
+
+    <h1 class="cert-title">Certificacion de Entrega — Entrega 4: Contratos de interfaz y descubrimiento de servicios</h1>
+    <h2 class="module-subtitle">Modulo 4 — Middleware y componentes distribuidos</h2>
+
+    <hr class="divider">
+
+    <p class="description-text">
+      El foco de esta entrega es formalizar como se comunican los componentes entre si: contratos de interfaz explicitos (API REST) y un mecanismo de descubrimiento de servicios, aunque sea simplificado.
+    </p>
+
+    <div class="eval-box">
+      <strong>Que evalua esta entrega:</strong> Que el sistema este desacoplado por contrato explicito, no por coincidencia entre los integrantes.
+    </div>
+
+    <h3 class="section-title">Datos generales</h3>
+    <table class="data-table">
+      <tr>
+        <td class="data-label">Grupo N°:</td>
+        <td class="data-value"><strong>Grupo 2</strong> (Donato Mattio &amp; Cristian Carilavi)</td>
+      </tr>
+      <tr>
+        <td class="data-label">Tag / Release de esta entrega:</td>
+        <td class="data-value"><code>v1-middleware</code></td>
+      </tr>
+      <tr>
+        <td class="data-label">Fecha de entrega:</td>
+        <td class="data-value">18/11/2026</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Checklist de la entrega</h3>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th class="col-req">Requisito de la entrega</th>
+          <th class="col-check">Cumple</th>
+          <th class="col-just">Justificacion breve / evidencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-req">Los contratos de interfaz (API REST) entre componentes estan documentados formalmente.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Documentados formalmente bajo <strong>OpenAPI 3.0.3</strong> en <code>contracts/openapi-clinical-records.yaml</code>, <code>openapi-notifications.yaml</code> y <code>openapi-service-registry.yaml</code>. Ademas, cada componente expone su contrato en vivo en <code>GET /api/v1/contract</code> y se incluye coleccion de Postman v2.1 (<code>contracts/hoscorp-entrega4.postman_collection.json</code>).
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Cada componente puede modificarse internamente sin romper el contrato hacia los demas.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Implementado con el patron <strong>Contract Adapter / DTO</strong> (<code>ClinicalRecordDTOV1</code>, <code>AuditLogEntryV1</code>). El backend permite conmutar en caliente su motor interno (<code>POST /api/v1/internal/switch-engine</code>) entre <code>v1-flat-legacy-store</code> (plano) y <code>v2-normalized-ehr-crypto</code> (arbol jerarquico HL7/FHIR con sello SHA-256), manteniendo el JSON del contrato publico 100% invariante.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Hay un mecanismo de descubrimiento de servicios implementado (aunque sea simplificado).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Se implemento el microservicio dedicado <strong><code>service-registry</code> (:5002)</strong>. Los servicios se auto-registran al iniciar (<code>POST /api/v1/registry/register</code>), envian heartbeats cada 5s con control de TTL (18s) y el backend descubre dinamicamente a <code>notification-service</code> mediante <code>GET /api/v1/registry/discover/notification-service</code> con balanceo Round-Robin.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">El desacople esta verificado: no depende de que los integrantes se hayan puesto de acuerdo informalmente.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Verificado mediante: <strong>1)</strong> Validadores de esquemas en runtime que rechazan violaciones de contrato con <code>HTTP 400 CONTRACT_VIOLATION</code>; <strong>2)</strong> Eliminacion de URLs hardcodeadas en <code>docker-compose.yml</code>; y <strong>3)</strong> Suite automatizada <code>scripts/test-contratos-discovery.ps1</code> y laboratorio en UI que verifican paridad tras mutar motores internos.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-title">Evidencia adicional</h3>
+    <p style="font-size: 8.5pt; font-weight: 600; color: #1f2937;">Link a la documentacion de la API (ej. coleccion de Postman, documentacion online, README):</p>
+    <div class="evidence-box">
+      <strong>1. Especificaciones OpenAPI 3.0.3 (YAML):</strong> <code>Entrega 4/contracts/openapi-clinical-records.yaml</code> | <code>openapi-notifications.yaml</code> | <code>openapi-service-registry.yaml</code><br>
+      <strong>2. Coleccion de Postman v2.1:</strong> <code>Entrega 4/contracts/hoscorp-entrega4.postman_collection.json</code><br>
+      <strong>3. Endpoints de Contrato en Vivo y Explorador Web:</strong> <a href="http://localhost:3000" style="color: #0284c7;">http://localhost:3000</a> | <code>http://localhost:5000/api/v1/contract</code> | <code>http://localhost:5001/api/v1/contract</code> | <code>http://localhost:5002/api/v1/contract</code><br>
+      <strong>4. Script Automatizado de Certificacion:</strong> Ejecutar <code>.\scripts\test-contratos-discovery.ps1</code> o <code>node .\scripts\test-contratos-discovery.js</code>.
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes · Proyecto Final — 1</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGINA 2 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes · Proyecto Final</span>
+      <span class="page-number">Pagina 2</span>
+    </div>
+
+    <h2 class="section-title" style="font-size: 13pt; margin-top: 10px; color: #1e3a8a;">Espacio para el docente</h2>
+    <hr class="divider">
+
+    <table class="data-table" style="margin-top: 15px; margin-bottom: 20px;">
+      <tr>
+        <td class="data-label" style="width: 30%;">Nota:</td>
+        <td class="data-value">________ / 10</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Corregido por:</td>
+        <td class="data-value">Completar</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Fecha de correccion:</td>
+        <td class="data-value">dd/mm/aaaa</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Observaciones:</h3>
+    <div class="docente-box">
+      Espacio para comentarios del docente
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px dotted #cbd5e1; padding-top: 15px; font-size: 8.5pt; color: #64748b;">
+      <p><strong>Resumen de artefactos tecnicos provistos para evaluacion (Entrega 4):</strong></p>
+      <ul style="margin-left: 18px; margin-top: 6px; line-height: 1.5;">
+        <li><code>service-registry/src/server.js</code>: Servidor de descubrimiento (:5002) con auto-registro, heartbeats TTL y resolucion Round-Robin.</li>
+        <li><code>contracts/</code>: Especificaciones OpenAPI 3.0.3 (YAML) de los 3 servicios y coleccion de Postman v2.1.</li>
+        <li><code>backend/src/server.js</code>: Adaptador de Contrato V1 con conmutacion en caliente de motor interno (Plano V1 vs EHR Criptografico V2) y cliente de Service Discovery sin URLs hardcodeadas.</li>
+        <li><code>frontend/src/index.html</code>: Portal Web con directorio en vivo del Service Registry, comparador de estructura interna vs DTO publico y visor OpenAPI.</li>
+        <li><code>scripts/test-contratos-discovery.ps1</code>: Script automatizado de Contract Testing y verificacion de desacople.</li>
+      </ul>
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes · Proyecto Final — 2</span>
+    </div>
+  </div>
+
+</body>
+</html>

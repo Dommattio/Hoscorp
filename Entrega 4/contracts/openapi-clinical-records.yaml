@@ -1,0 +1,336 @@
+openapi: 3.0.3
+info:
+  title: Hoscorp Clinical Records Service API
+  version: 1.0.0
+  description: >
+    Contrato formal de interfaz REST para el componente central de Historias Clinicas Unificadas de Hoscorp (Entrega 4 - Modulo 4).
+    Garantiza el desacople estricto entre componentes mediante esquemas explicitos (ClinicalRecordDTOV1),
+    validacion de tipos en tiempo de ejecucion, Control de Concurrencia Optimista (OCC) y resolucion
+    dinamica del servicio de auditoria mediante Service Discovery.
+  contact:
+    name: Grupo 2 - Donato Mattio & Cristian Carilavi
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:5000
+    description: Acceso directo local al Backend Clinico
+  - url: http://backend:5000
+    description: Endpoint registrado en Service Registry dentro de hoscorp-net
+
+paths:
+  /api/v1/records:
+    get:
+      summary: Listar todas las historias clinicas
+      operationId: listClinicalRecords
+      tags:
+        - ClinicalRecords
+      responses:
+        '200':
+          description: Lista de historias clinicas adaptadas al esquema de contrato V1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalRecordListResponseV1'
+    post:
+      summary: Crear una nueva historia clinica
+      operationId: createClinicalRecord
+      tags:
+        - ClinicalRecords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicalRecordCreateInputV1'
+      responses:
+        '201':
+          description: Historia clinica creada satisfactoriamente bajo contrato V1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalRecordMutationResponseV1'
+        '400':
+          description: Violacion de contrato (campos obligatorios ausentes o tipos invalidos)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractViolationErrorV1'
+
+  /api/v1/records/{id}:
+    get:
+      summary: Obtener una historia clinica especifica por ID
+      operationId: getClinicalRecordById
+      tags:
+        - ClinicalRecords
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: rec-1001
+      responses:
+        '200':
+          description: Registro clinico conforme al esquema ClinicalRecordDTOV1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalRecordSingleResponseV1'
+        '404':
+          description: Registro clinico no encontrado
+    put:
+      summary: Actualizar una historia clinica con validacion de contrato y OCC
+      operationId: updateClinicalRecordOCC
+      tags:
+        - ClinicalRecords
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: rec-1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicalRecordUpdateInputV1'
+      responses:
+        '200':
+          description: Registro actualizado exitosamente e incremento atomico de version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalRecordMutationResponseV1'
+        '400':
+          description: Violacion de contrato (version ausente o tipos invalidos)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractViolationErrorV1'
+        '409':
+          description: Conflicto de concurrencia OCC detectado (Lost Update evitado)
+
+  /api/v1/records/{id}/sync-audit-check:
+    get:
+      summary: Validar auditoria descubriendo dinamicamente al notification-service via Service Registry
+      operationId: checkAuditViaDiscovery
+      tags:
+        - InterServiceContract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: rec-1001
+      responses:
+        '200':
+          description: Servicio descubierto en el Service Registry y contrato verificado
+        '503':
+          description: Ninguna instancia saludable de notification-service encontrada en el Service Registry
+
+  /api/v1/internal/switch-engine:
+    post:
+      summary: Conmutar motor de almacenamiento interno (v1-flat-legacy-store vs v2-normalized-ehr-crypto)
+      operationId: switchInternalEngine
+      tags:
+        - DecouplingVerification
+      responses:
+        '200':
+          description: Motor interno modificado en caliente sin alterar el contrato publico ClinicalRecordDTOV1
+
+  /api/v1/contract/verify-decoupling:
+    post:
+      summary: Ejecutar suite automatizada de pruebas de contrato, mutacion interna y Service Discovery
+      operationId: runDecouplingVerificationSuite
+      tags:
+        - DecouplingVerification
+      responses:
+        '200':
+          description: Reporte completo de verificacion de desacople por contrato
+
+components:
+  schemas:
+    ClinicalRecordDTOV1:
+      type: object
+      required:
+        - id
+        - version
+        - paciente
+        - dni
+        - fecha
+        - centroSalud
+        - profesional
+        - diagnostico
+        - observaciones
+        - updatedAt
+      properties:
+        id:
+          type: string
+          example: rec-1001
+        version:
+          type: integer
+          minimum: 1
+          example: 1
+        paciente:
+          type: string
+          example: Carlos Gomez
+        dni:
+          type: string
+          example: 32.456.789
+        fecha:
+          type: string
+          format: date
+          example: '2026-10-10'
+        centroSalud:
+          type: string
+          example: Hospital Central de Cordoba
+        profesional:
+          type: string
+          example: Dra. Sofia Albarracin (Mat. 44521)
+        diagnostico:
+          type: string
+          example: Hipertension arterial estadio 1
+        observaciones:
+          type: string
+          example: Control trimestral de presion. Se indica dieta hiposodica.
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2026-10-10T14:30:00.000Z'
+
+    ClinicalRecordCreateInputV1:
+      type: object
+      required:
+        - paciente
+        - centroSalud
+        - diagnostico
+      properties:
+        paciente:
+          type: string
+          minLength: 2
+        dni:
+          type: string
+        centroSalud:
+          type: string
+          minLength: 2
+        profesional:
+          type: string
+        diagnostico:
+          type: string
+          minLength: 2
+        observaciones:
+          type: string
+
+    ClinicalRecordUpdateInputV1:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          minimum: 1
+        paciente:
+          type: string
+        centroSalud:
+          type: string
+        profesional:
+          type: string
+        diagnostico:
+          type: string
+        observaciones:
+          type: string
+        modificadoPor:
+          type: string
+
+    ClinicalRecordListResponseV1:
+      type: object
+      required:
+        - contractVersion
+        - node
+        - internalEngine
+        - count
+        - data
+      properties:
+        contractVersion:
+          type: string
+          example: 1.0.0
+        node:
+          type: string
+        internalEngine:
+          type: string
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClinicalRecordDTOV1'
+
+    ClinicalRecordSingleResponseV1:
+      type: object
+      required:
+        - contractVersion
+        - node
+        - internalEngine
+        - data
+      properties:
+        contractVersion:
+          type: string
+          example: 1.0.0
+        node:
+          type: string
+        internalEngine:
+          type: string
+        data:
+          $ref: '#/components/schemas/ClinicalRecordDTOV1'
+
+    ClinicalRecordMutationResponseV1:
+      type: object
+      required:
+        - contractVersion
+        - status
+        - code
+        - message
+        - data
+      properties:
+        contractVersion:
+          type: string
+          example: 1.0.0
+        status:
+          type: string
+          enum: [SUCCESS]
+        code:
+          type: integer
+        message:
+          type: string
+        internalEngineUsed:
+          type: string
+        data:
+          $ref: '#/components/schemas/ClinicalRecordDTOV1'
+
+    ContractViolationErrorV1:
+      type: object
+      required:
+        - status
+        - code
+        - contract
+        - error
+        - violations
+      properties:
+        status:
+          type: string
+          enum: [CONTRACT_VIOLATION]
+        code:
+          type: integer
+          example: 400
+        contract:
+          type: string
+        error:
+          type: string
+        violations:
+          type: array
+          items:
+            type: string
