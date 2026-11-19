@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoscorp - Entrega Final: Integracion de las 6 Capas y Demo en Vivo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="logo-badge">HC</div>
+        <div>
+          <h1>Hoscorp <span class="badge-tag">v6-final</span></h1>
+          <p class="subtitle">Gestion Unificada de Historias Clinicas · Entrega Final: Integracion de las 6 Capas, Demo en Vivo y Escalabilidad</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="academic-tag">
+          <span class="label">Materia:</span> Programacion Distribuida y Componentes
+        </div>
+        <div class="academic-tag">
+          <span class="label">Grupo:</span> N° 2 (Donato Mattio &amp; Cristian Carilavi)
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="content-wrapper">
+
+      <!-- Nodes Physical Status Banner -->
+      <section class="section-card nodes-banner">
+        <div class="section-header">
+          <div>
+            <h2>Topologia Integrada de las 6 Capas (Infraestructura, Comunicacion, Middleware, Seguridad y Escalabilidad)</h2>
+            <p class="section-desc">Monitoreo unificado de contenedores, canales REST/AMQP, Service Discovery, JWT/RBAC/TLS 1.3, Replicacion y Cache L1.</p>
+          </div>
+          <div class="live-indicator">
+            <span class="pulse-dot"></span>
+            <span>6 Capas Operativas (Heartbeat 3s)</span>
+          </div>
+        </div>
+
+        <div class="nodes-grid">
+          <!-- Node 1 -->
+          <div class="node-card" id="card-backend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N1]</span>
+                <div>
+                  <span class="node-number">Nodo 1 (Core 6 Capas)</span>
+                  <h3>Backend Clinico Integrado</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-backend">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Seguridad / TLS:</span>
+                <span class="detail-value mono">JWT HS256 + TLS :5443</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Cache L1 (Hit Ratio):</span>
+                <span class="detail-value mono" id="backend-cache-ratio">0%</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Circuit Breaker:</span>
+                <span class="detail-value mono" id="backend-cb-state">CLOSED</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Auto-Recuperaciones:</span>
+                <span class="detail-value mono" id="backend-recoveries-count">0 ejecutadas</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Latencia / Uptime:</span>
+                <span class="detail-value mono"><span id="backend-latency">-</span> / <span id="backend-uptime">-</span></span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">OCC + Adapter V1/V2 + Cache-Aside + Replica</span>
+            </div>
+          </div>
+
+          <!-- Service Registry Node -->
+          <div class="node-card" id="card-registry">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[SD]</span>
+                <div>
+                  <span class="node-number">Discovery &amp; Scaling</span>
+                  <h3>Service Registry &amp; Balancer</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-registry">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Servicio:</span>
+                <span class="detail-value mono">service-registry (:5002)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Escalabilidad:</span>
+                <span class="detail-value">Horizontal Scale-Out + RR</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Instancias Activas:</span>
+                <span class="detail-value mono" id="registry-active-count">0</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Lookups / Failovers:</span>
+                <span class="detail-value mono" id="registry-lookups-count">0</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Uptime:</span>
+                <span class="detail-value mono" id="registry-uptime">-</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Balanceador Round-Robin + Failover</span>
+            </div>
+          </div>
+
+          <!-- Node 2 -->
+          <div class="node-card" id="card-notification">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N2]</span>
+                <div>
+                  <span class="node-number">Nodo 2 (Pool Escalable)</span>
+                  <h3>Cluster Auditoria y Alertas</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-notification">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Modo Clúster:</span>
+                <span class="detail-value mono">Primaria + Replicas</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Contrato Formal:</span>
+                <span class="detail-value mono">OpenAPI 3.0.3 (V1)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Topicos Auditados:</span>
+                <span class="detail-value mono">clinical | security | scale</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Eventos Procesados:</span>
+                <span class="detail-value mono" id="notification-msg-count">0</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Uptime:</span>
+                <span class="detail-value mono" id="notification-uptime">-</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Escalable Horizontalmente</span>
+            </div>
+          </div>
+
+          <!-- Message Broker -->
+          <div class="node-card" id="card-rabbitmq">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[MQ]</span>
+                <div>
+                  <span class="node-number">Message Broker</span>
+                  <h3>RabbitMQ Event Bus</h3>
+                </div>
+              </div>
+              <span class="status-badge" id="badge-rabbitmq">Verificando...</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Protocolo:</span>
+                <span class="detail-value mono">AMQP 0-9-1 (:5672)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Exchange:</span>
+                <span class="detail-value mono">hoscorp.events (Topic)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Cola Durable:</span>
+                <span class="detail-value mono">hoscorp.notifications.queue</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Desacoplamiento:</span>
+                <span class="detail-value mono">Asincrono con ACK</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Panel Gestion:</span>
+                <span class="detail-value mono">localhost:15672</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Bus de Eventos de las 6 Capas</span>
+            </div>
+          </div>
+
+          <!-- Node 3 -->
+          <div class="node-card active" id="card-frontend">
+            <div class="node-card-header">
+              <div class="node-title-group">
+                <span class="node-icon">[N3]</span>
+                <div>
+                  <span class="node-number">Nodo 3 (TLS Gateway)</span>
+                  <h3>Portal Web Integrado</h3>
+                </div>
+              </div>
+              <span class="status-badge status-online" id="badge-frontend">TLS ONLINE</span>
+            </div>
+
+            <div class="node-details">
+              <div class="detail-row">
+                <span class="detail-label">Gateway HTTPS:</span>
+                <span class="detail-value mono">https://localhost:3443</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Gateway HTTP:</span>
+                <span class="detail-value mono">http://localhost:3000</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Tramo Interno:</span>
+                <span class="detail-value mono">https://backend:5443</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Certificado X.509:</span>
+                <span class="detail-value mono">CN=hoscorp.local</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Sesion Activa:</span>
+                <span class="detail-value mono" id="header-active-role">MEDICO</span>
+              </div>
+            </div>
+
+            <div class="node-footer">
+              <span class="isolation-chip">Consola Maestra de Demo en Vivo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="failure-alert hidden" id="backend-down-alert">
+          <div class="alert-icon">[!]</div>
+          <div class="alert-content">
+            <h4>Alerta de Disponibilidad en Entorno Distribuido</h4>
+            <p>Uno o mas componentes no responden. El sistema mantiene activos los mecanismos de tolerancia a fallos.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Operational Area: Split Columns -->
+      <div class="operational-split">
+        
+        <!-- Left Column -->
+        <div class="main-column">
+
+          <!-- SECTION 1 (ENTREGA 6 FINAL): LIVE E2E DEMO ORCHESTRATOR & SCALABILITY PATTERNS -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Orquestador de Demo en Vivo de Punta a Punta (Las 6 Capas) y Escalabilidad</h2>
+                <p class="section-desc">Ejecuta la verificacion integrada de las 6 capas del semestre o prueba el escalado horizontal con balanceo Round-Robin y Cache L1.</p>
+              </div>
+              <span class="status-badge status-online">Cierre Integrador</span>
+            </div>
+
+            <div class="lab-card" style="margin-bottom: 0;">
+              <div class="lab-controls">
+                <button type="button" class="btn btn-accent" id="btn-run-e2e" onclick="runEndToEndSixLayersDemo()">
+                  Ejecutar Demo en Vivo de Punta a Punta (Las 6 Capas Integradas)
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="scaleClusterHorizontally(4)">
+                  Escalar Clúster Horizontalmente (4 Nodos + Balanceo Round-Robin)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="inspectScalabilityMetrics()">
+                  Ver Metricas de Cache L1 y Circuit Breaker
+                </button>
+              </div>
+
+              <div id="e2e-layers-container" class="step-list" style="display: none; margin-bottom: 1rem;"></div>
+              <pre class="thread-code" id="scalability-metrics-viewer" style="max-height: 170px;">Presiona "Ejecutar Demo en Vivo de Punta a Punta" para validar las 6 capas integradas en tiempo real...</pre>
+              <div id="e2e-verdict-box" class="verdict-box" style="display: none;"></div>
+            </div>
+          </section>
+
+          <!-- SECTION 2: SECURITY (JWT + RBAC + TLS) & FAULT RECOVERY LAB -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Laboratorio de Seguridad (JWT + RBAC + TLS) y Auto-Recuperacion (Self-Healing)</h2>
+                <p class="section-desc">Control de acceso por roles, cifrado X.509 en transito y restauracion automatica desde Replica Espejo (RPO = 0).</p>
+              </div>
+              <span class="version-pill" id="active-user-badge">Autenticando...</span>
+            </div>
+
+            <div class="lab-card" style="margin-bottom: 0;">
+              <div class="lab-controls">
+                <span class="control-label">Cambiar Rol Activo:</span>
+                <button type="button" class="btn btn-primary btn-sm" onclick="loginWithPreset('dra.gomez', 'medico123')">
+                  Dra. Gomez [MEDICO]
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="loginWithPreset('carlos.gomez', 'paciente123')">
+                  Carlos Gomez [PACIENTE - 403 en Escritura]
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="loginWithPreset('admin.hoscorp', 'admin123')">
+                  Ing. Funes [ADMIN_AUDITOR]
+                </button>
+                <button type="button" class="btn btn-danger-sm" onclick="clearJwtSession()">
+                  Sin Token [401]
+                </button>
+              </div>
+
+              <div class="lab-controls" style="border-top: 1px solid var(--border); padding-top: 0.75rem;">
+                <button type="button" class="btn btn-accent btn-sm" id="btn-test-rbac" onclick="runAutomatedRbacAndTlsTest()">
+                  Probar RBAC (201 Medico vs 403 Paciente vs 401 Anonimo)
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-simulate-disaster" onclick="runFailureAndRecoveryTest()">
+                  Simular Corrupcion y Auto-Recuperacion (RPO=0 + Failover)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="switchInternalEngineLive()">
+                  Hot-Swap Motor Interno (V1 &lt;-&gt; V2)
+                </button>
+              </div>
+
+              <div class="lab-split-view">
+                <div class="thread-card accent">
+                  <div class="thread-card-header">
+                    <span>Sesion JWT Activa</span>
+                    <span class="engine-pill" id="jwt-role-pill">MEDICO</span>
+                  </div>
+                  <pre class="thread-code" id="jwt-session-viewer">Iniciando sesion...</pre>
+                </div>
+
+                <div class="thread-card success">
+                  <div class="thread-card-header">
+                    <span>Evidencia de Seguridad / Auto-Recuperacion</span>
+                    <span class="status-badge status-online" id="badge-security-output">LISTO</span>
+                  </div>
+                  <pre class="thread-code" id="security-test-viewer">Selecciona una prueba superior para ver el resultado.</pre>
+                </div>
+              </div>
+
+              <div id="recovery-timeline-container" class="step-list" style="display: none;"></div>
+              <div id="security-verdict-box" class="verdict-box" style="display: none;"></div>
+            </div>
+          </section>
+
+          <!-- SECTION 3: SERVICE DISCOVERY & HORIZONTAL SCALING DIRECTORY -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Directorio del Service Registry (Auto-Registro, Replicas y Balanceo Round-Robin)</h2>
+                <p class="section-desc">Muestra todas las instancias activas y la distribucion de hits de balanceo de carga.</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="loadServiceRegistryCatalog()">Refrescar Directorio</button>
+            </div>
+
+            <div class="table-wrapper" style="margin-bottom: 0;">
+              <table class="registry-table">
+                <thead>
+                  <tr>
+                    <th>Servicio Logico</th>
+                    <th>Instance ID</th>
+                    <th>Rol Clúster</th>
+                    <th>Endpoint Resuelto</th>
+                    <th>Motor Interno</th>
+                    <th>Estado / Heartbeat</th>
+                    <th>Hits Balanceo</th>
+                  </tr>
+                </thead>
+                <tbody id="registry-table-body">
+                  <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted);">Consultando Service Registry...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- SECTION 4: MEDICAL RECORDS MANAGEMENT -->
+          <section class="section-card records-section">
+            <div class="section-header">
+              <div>
+                <h2>Gestion de Historias Clinicas (Contrato V1 + JWT/RBAC + OCC + Cache L1)</h2>
+                <p class="section-desc">Lecturas aceleradas por Cache-Aside L1 y escrituras protegidas por RBAC y replicadas en espejo.</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="loadRecords()">
+                Actualizar Datos
+              </button>
+            </div>
+
+            <form id="record-form" class="record-form" onsubmit="handleCreateRecord(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="input-paciente">Nombre del Paciente *</label>
+                  <input type="text" id="input-paciente" required placeholder="Ej: Juan Perez">
+                </div>
+
+                <div class="form-group">
+                  <label for="input-dni">DNI / Identificacion</label>
+                  <input type="text" id="input-dni" placeholder="Ej: 35.123.456">
+                </div>
+
+                <div class="form-group">
+                  <label for="input-centro">Centro de Salud *</label>
+                  <select id="input-centro" required>
+                    <option value="Hospital Central de Cordoba">Hospital Central de Cordoba</option>
+                    <option value="Clinica Privada San Lucas">Clinica Privada San Lucas</option>
+                    <option value="Sanatorio Allende">Sanatorio Allende</option>
+                    <option value="Centro Medico San Martin">Centro Medico San Martin</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-profesional">Profesional Interviniente</label>
+                  <input type="text" id="input-profesional" placeholder="Ej: Dra. Sofia Gomez">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input-diagnostico">Diagnostico / Motivo de Consulta *</label>
+                <input type="text" id="input-diagnostico" required placeholder="Ej: Chequeo clinico preventivo de rutina">
+              </div>
+
+              <div class="form-group">
+                <label for="input-observaciones">Observaciones / Tratamiento</label>
+                <textarea id="input-observaciones" rows="2" placeholder="Indicaciones medicas, medicacion prescrita o evolucion..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-submit-record">
+                  Guardar y Replicar Registro
+                </button>
+                <span class="form-status" id="form-feedback"></span>
+              </div>
+            </form>
+
+            <div class="records-container">
+              <div class="records-header">
+                <h3>Historial Unificado de Registros</h3>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <span class="records-count" id="records-count">Cargando registros...</span>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetSeedRecords()">Restablecer Semilla</button>
+                </div>
+              </div>
+
+              <div class="records-list" id="records-list">
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 5: RABBITMQ AUDIT FEED -->
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Bitacora Inmutable de Eventos de las 6 Capas (RabbitMQ)</h2>
+                <p class="section-desc">Trazabilidad unificada de eventos clinicos, autenticacion JWT, rechazos RBAC, recuperaciones y escalabilidad.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" onclick="loadAuditLogs()">Refrescar Cola</button>
+                <button class="btn btn-danger-sm" onclick="clearAuditLogs()">Limpiar</button>
+              </div>
+            </div>
+
+            <div class="audit-container">
+              <div class="audit-list" id="audit-list">
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Right Column: Checklist & Technical Evidence -->
+        <aside class="side-column">
+          
+          <!-- Proof Checklist Card (Entrega Final) -->
+          <div class="section-card checklist-card">
+            <div class="section-header">
+              <h2>Checklist Entrega Final</h2>
+              <span class="tag-status">100% Cumplido</span>
+            </div>
+            <ul class="checklist-items">
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Las seis capas funcionan integradas</strong>
+                  <p>Infraestructura (5 contenedores), Comunicacion (REST + RabbitMQ + OCC), Middleware (OpenAPI 3.0 + Adapter V1/V2 + Service Discovery), Seguridad (JWT + RBAC + TLS 1.3) y Patrones/Escalabilidad (Cache-Aside L1 + Circuit Breaker + Scale-Out Round-Robin).</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>La demo en vivo fue ensayada de punta a punta</strong>
+                  <p>Orquestador de Demo en Vivo E2E integrado en UI y script automatizado .\scripts\demo-en-vivo-e2e.ps1 que valida las 6 capas en menos de 5 segundos.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Repositorio con README, /docs por modulo y tags</strong>
+                  <p>README raiz actualizado, carpeta /docs con subcarpetas entrega-1 a entrega-6 y tags de release por cada hito del semestre (v6-final).</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Cada integrante puede explicar cualquier parte</strong>
+                  <p>Arquitectura homogenea, transparente y documentada modulo por modulo para defensa oral integral de Donato Mattio y Cristian Carilavi.</p>
+                </div>
+              </li>
+              <li class="check-item ok">
+                <span class="check-icon">[OK]</span>
+                <div>
+                  <strong>Se repasaron devoluciones y resolvieron pendientes</strong>
+                  <p>Evolucion continua desde Entrega 1 a 6 sin deudas tecnicas, eliminando URLs hardcodeadas, cierres abruptos y puntos unicos de fallo.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Interactive CLI Demonstration Commands -->
+          <div class="section-card cli-demo-card">
+            <div class="section-header">
+              <h2>Comandos para la Demo en Vivo</h2>
+              <span class="cli-chip">Defensa Oral</span>
+            </div>
+            <p class="cli-intro">Comandos listos para ejecutar durante la presentacion y defensa oral:</p>
+
+            <div class="cli-block">
+              <span class="cli-step">1. Levantar las 6 capas integradas:</span>
+              <code>docker compose up -d --build</code>
+              <span class="cli-note">Inicia Service Registry, RabbitMQ, Auditoria, Backend Seguro y Gateway TLS.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">2. Ejecutar Demo en Vivo de Punta a Punta (6 Capas):</span>
+              <code>.\scripts\demo-en-vivo-e2e.ps1</code>
+              <span class="cli-note">Recorre y verifica automaticamente Infraestructura, Comunicacion, Middleware, Seguridad y Escalabilidad.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">3. Escalar horizontalmente y balancear carga:</span>
+              <code>curl -X POST http://localhost:5000/api/v1/scalability/scale-cluster</code>
+              <span class="cli-note">Escala el pool a 4 instancias y demuestra reparto Round-Robin.</span>
+            </div>
+
+            <div class="cli-block">
+              <span class="cli-step">4. Consultar metricas de Cache L1 y Circuit Breaker:</span>
+              <code>curl http://localhost:5000/api/v1/scalability/metrics</code>
+              <span class="cli-note">Muestra Cache Hits, Hit Ratio (%), invalidaciones y estado del Circuit Breaker.</span>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bottom-footer">
+      <div>
+        <strong>Hoscorp</strong> · Sistema Centralizado de Historias Clinicas · Entrega Final: Integracion de los Modulos (v6-final)
+      </div>
+      <div>
+        Programacion Distribuida y Componentes — Grupo 2 (Donato Mattio &amp; Cristian Carilavi) · 2026
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

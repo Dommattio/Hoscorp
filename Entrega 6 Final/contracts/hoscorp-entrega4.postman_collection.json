@@ -1,0 +1,215 @@
+{
+  "info": {
+    "_postman_id": "a4e8c910-5b21-4c9a-9e12-hoscorp00004",
+    "name": "Hoscorp - Entrega 4: Contratos de Interfaz y Service Discovery",
+    "description": "Coleccion oficial de Postman (v2.1) con pruebas de contrato explicitas (Contract Testing) y verificacion del mecanismo de descubrimiento de servicios para Hoscorp (Grupo 2 - Donato Mattio & Cristian Carilavi).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Service Discovery Registry (:5002)",
+      "item": [
+        {
+          "name": "Obtener Catalogo de Servicios Registrados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5002/api/v1/registry/services",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5002",
+              "path": ["api", "v1", "registry", "services"]
+            }
+          }
+        },
+        {
+          "name": "Descubrir Dinamicamente a notification-service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5002/api/v1/registry/discover/notification-service",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5002",
+              "path": ["api", "v1", "registry", "discover", "notification-service"]
+            }
+          }
+        },
+        {
+          "name": "Consultar Contrato OpenAPI 3.0 del Service Registry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5002/api/v1/contract",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5002",
+              "path": ["api", "v1", "contract"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Contratos del Backend Clinico (:5000)",
+      "item": [
+        {
+          "name": "Consultar Contrato OpenAPI 3.0 del Backend Clinico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/contract",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "contract"]
+            }
+          }
+        },
+        {
+          "name": "Listar Historias Clinicas (Contrato ClinicalRecordListResponseV1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/records",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "records"]
+            }
+          }
+        },
+        {
+          "name": "Crear Historia Clinica Cumpliendo Contrato V1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": \"Roberto Sanchez\",\n  \"dni\": \"31.222.444\",\n  \"centroSalud\": \"Sanatorio Allende\",\n  \"profesional\": \"Dra. Carla Vizzotti\",\n  \"diagnostico\": \"Control cardiologico preventivo sin hallazgos patologicos\",\n  \"observaciones\": \"Electrocardiograma normal.\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/records",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "records"]
+            }
+          }
+        },
+        {
+          "name": "Prueba de Rechazo por Violacion de Contrato (HTTP 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": \"\",\n  \"diagnostico\": 99999\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/records",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "records"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Verificacion de Desacople y Mutacion Interna",
+      "item": [
+        {
+          "name": "Conmutar Motor Interno (v1 Flat vs v2 EHR Normalized SHA-256)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/internal/switch-engine",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "internal", "switch-engine"]
+            }
+          }
+        },
+        {
+          "name": "Ejecutar Suite Completa de Certificacion de Desacople",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/contract/verify-decoupling",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "contract", "verify-decoupling"]
+            }
+          }
+        },
+        {
+          "name": "Llamada Inter-Servicio Resuelta Dinamicamente via Service Discovery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/records/rec-1001/sync-audit-check",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "records", "rec-1001", "sync-audit-check"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Contratos del Servicio de Notificaciones (:5001)",
+      "item": [
+        {
+          "name": "Consultar Contrato OpenAPI 3.0 de Notificaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5001/api/v1/contract",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5001",
+              "path": ["api", "v1", "contract"]
+            }
+          }
+        },
+        {
+          "name": "Validar Auditoria bajo Contrato AuditValidationResponseV1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5001/api/v1/validate-audit?recordId=rec-1001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5001",
+              "path": ["api", "v1", "validate-audit"],
+              "query": [
+                { "key": "recordId", "value": "rec-1001" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

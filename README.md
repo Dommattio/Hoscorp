@@ -4,7 +4,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Estado de Entrega](https://img.shields.io/badge/Entrega-5%20(Actual)-blue.svg)](#plan-de-entregas)
+[![Estado de Entrega](https://img.shields.io/badge/Entrega-6%20Final%20(Completa)-success.svg)](#plan-de-entregas)
 
 ---
 
@@ -64,21 +64,24 @@ hoscorp/
 ├── Entrega 3/
 ├── Entrega 4/
 ├── Entrega 5/
+├── Entrega 6 Final/
 │   ├── certs/                   # Certificados X.509 RSA-2048 SHA-256 para HTTPS/TLS 1.3
-│   ├── service-registry/        # Discovery Server con soporte de Primaria + Réplica y Failover
-│   ├── backend/                 # Core clínico con Auth JWT (HS256), RBAC, TLS :5443 y Replica Mirror
-│   ├── notification-service/    # Cluster de auditoría de seguridad y consumidor AMQP
-│   ├── frontend/                # Gateway HTTPS (:3443) y Laboratorio de Seguridad y Auto-Recuperación
-│   ├── scripts/                 # Scripts automatizados de seguridad y recuperación ante fallos
-│   ├── docs/                    # Checklist oficial, Informe de Amenazas (STRIDE) y Certificación HTML/PDF
-│   ├── docker-compose.yml       # Orquestación con volúmenes y certificados TLS montados
-│   └── README.md                # Documentación detallada de Entrega 5
+│   ├── contracts/               # Especificaciones OpenAPI 3.0.3 (YAML) y Postman v2.1
+│   ├── service-registry/        # Discovery Server con Escalabilidad Horizontal y Round-Robin
+│   ├── backend/                 # Core clínico integrado (6 Capas: OCC, Adapter, JWT/RBAC, Replica, Cache L1)
+│   ├── notification-service/    # Cluster de auditoría escalable y consumidor AMQP
+│   ├── frontend/                # Consola Web HTTPS (:3443) y Orquestador de Demo en Vivo E2E
+│   ├── scripts/                 # Script de Demo en Vivo de Punta a Punta (demo-en-vivo-e2e.ps1)
+│   ├── docs/                    # Checklist y Certificación Oficial Imprimible de Entrega Final
+│   ├── docker-compose.yml       # Orquestación integrada de los 5 nodos
+│   └── README.md                # Guía completa de la Entrega 6 Final
 ├── docs/
-│   ├── entrega-1/
-│   ├── entrega-2/
-│   ├── entrega-3/
-│   ├── entrega-4/
-│   └── entrega-5/
+│   ├── entrega-1/               # Documentación Módulo 1: Arquitectura 4+1
+│   ├── entrega-2/               # Documentación Módulo 2: Infraestructura y Nodos
+│   ├── entrega-3/               # Documentación Módulo 3: Comunicación y Concurrencia
+│   ├── entrega-4/               # Documentación Módulo 4: Contratos y Service Discovery
+│   ├── entrega-5/               # Documentación Módulo 5: Seguridad, TLS y Confiabilidad
+│   └── entrega-6/               # Documentación Módulo 6: Integración Final y Escalabilidad
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -86,17 +89,16 @@ hoscorp/
 
 ---
 
-## Plan de Entregas
+## Plan de Entregas y Tags del Semestre
 
-| N° | Hito / Entrega | Alcance y Contenido Principal | Estado | Acceso |
-|:--:|:---------------|:------------------------------|:------:|:-------|
-| 1 | Entrega 1 | Propuesta inicial y arquitectura de software (Modelo de Vistas 4+1) | Completado | [Ver Entrega 1](./Entrega%201/README.md) |
-| 2 | Entrega 2 | Arquitectura de Infraestructura: Nodos físicamente separados | Completado | [Ver Entrega 2](./Entrega%202/README.md) |
-| 3 | Entrega 3 | Comunicación síncrona, asíncrona (RabbitMQ) y concurrencia (OCC) | Completado | [Ver Entrega 3](./Entrega%203/README.md) |
-| 4 | Entrega 4 | Contratos de interfaz explícitos (OpenAPI 3.0) y Service Discovery | Completado | [Ver Entrega 4](./Entrega%204/README.md) |
-| **5** | **Entrega 5** | **Seguridad (JWT + RBAC + HTTPS/TLS) y Confiabilidad (Replicación y Failover)** | **Actual / Completo** | [Ver Entrega 5](./Entrega%205/README.md) |
-| 6 | Entrega 6 | Pruebas de integración, resiliencia, seguridad y rendimiento | Planificado | - |
-| 7 | Entrega 7 | Despliegue productivo, monitoreo, documentación final y cierre | Planificado | - |
+| N° | Hito / Entrega | Tag / Release | Alcance y Contenido Principal | Estado | Acceso |
+|:--:|:---------------|:-------------:|:------------------------------|:------:|:-------|
+| 1 | Entrega 1 | `v1-arquitectura` | Propuesta inicial y arquitectura de software (Modelo de Vistas 4+1) | Completado | [Ver Entrega 1](./Entrega%201/README.md) |
+| 2 | Entrega 2 | `v1-infraestructura` | Arquitectura de Infraestructura: Nodos físicamente separados | Completado | [Ver Entrega 2](./Entrega%202/README.md) |
+| 3 | Entrega 3 | `v1-comunicacion` | Comunicación síncrona, asíncrona (RabbitMQ) y concurrencia (OCC) | Completado | [Ver Entrega 3](./Entrega%203/README.md) |
+| 4 | Entrega 4 | `v1-middleware` | Contratos de interfaz explícitos (OpenAPI 3.0) y Service Discovery | Completado | [Ver Entrega 4](./Entrega%204/README.md) |
+| 5 | Entrega 5 | `v1-seguridad` | Seguridad (JWT + RBAC + HTTPS/TLS) y Confiabilidad (Replicación y Failover) | Completado | [Ver Entrega 5](./Entrega%205/README.md) |
+| **6** | **Entrega 6 Final** | **`v6-final`** | **Integración de las 6 Capas, Escalabilidad (Cache L1 + Scale-Out) y Demo en Vivo** | **Actual / Completo** | [Ver Entrega 6 Final](./Entrega%206%20Final/README.md) |
 
 ---
 
@@ -106,13 +108,13 @@ Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICE
 
 ---
 
-## Documentación de la Entrega 5 (Actual)
+## Documentación de la Entrega 6 Final (Actual)
 
 | Documento | Descripción |
 |-----------|-------------|
-| [Certificación Imprimible Entrega 5 (HTML / PDF)](./Entrega%205/docs/certificacion-entrega-5.html) | Plantilla idéntica a la hoja oficial de cátedra para imprimir a PDF (Ctrl + P) |
-| [Informe de Amenazas (STRIDE) y Prueba de Recuperación](./Entrega%205/docs/informe-amenazas-y-recuperacion.md) | Análisis de amenazas consideradas y demostración de recuperación ante fallos |
-| [Checklist Oficial Entrega 5](./Entrega%205/docs/checklist-entrega5.md) | Checklist completado con justificaciones y evidencia del Módulo 5 |
+| [Certificación Imprimible Entrega 6 Final (HTML / PDF)](./Entrega%206%20Final/docs/certificacion-entrega-6-final.html) | Plantilla idéntica a la hoja oficial de cátedra para imprimir a PDF (Ctrl + P) |
+| [Checklist Oficial Entrega 6 Final](./Entrega%206%20Final/docs/checklist-entrega6-final.md) | Checklist completado con justificaciones y evidencia de las 6 capas integradas |
+| [Guía de Demo en Vivo E2E](./Entrega%206%20Final/README.md) | Instrucciones paso a paso para ejecutar la demostración de punta a punta |
 
 ---
 

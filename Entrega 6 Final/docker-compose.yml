@@ -1,0 +1,143 @@
+# ==============================================================================
+# HOSCORP - PROGRAMACIÓN DISTRIBUIDA Y COMPONENTES
+# ENTREGA 6 FINAL: INTEGRACIÓN DE LAS 6 CAPAS, DEMO EN VIVO Y ESCALABILIDAD
+# ==============================================================================
+
+services:
+  service-registry:
+    container_name: hoscorp-service-registry
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - NODE_NAME=hoscorp-service-registry
+      - PORT=5002
+      - NODE_ENV=production
+    networks:
+      - hoscorp-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5002/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 4s
+
+  rabbitmq:
+    container_name: hoscorp-rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - hoscorp-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  notification-service:
+    container_name: hoscorp-notification-service
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_NAME=hoscorp-notification-service
+      - INSTANCE_ID=notification-service-primary-01
+      - SERVICE_HOST=notification-service
+      - PORT=5001
+      - SERVICE_REGISTRY_URL=http://service-registry:5002
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - NODE_ENV=production
+    networks:
+      - hoscorp-net
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  backend:
+    container_name: hoscorp-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+      - "5443:5443"
+    environment:
+      - NODE_NAME=hoscorp-backend-clinical
+      - INSTANCE_ID=clinical-records-node-01
+      - SERVICE_HOST=backend
+      - PORT=5000
+      - HTTPS_PORT=5443
+      - CERTS_DIR=/certs
+      - SERVICE_REGISTRY_URL=http://service-registry:5002
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - DATA_DIR=/data
+      - NODE_ENV=production
+    volumes:
+      - backend_data:/data
+      - ./certs:/certs:ro
+    networks:
+      - hoscorp-net
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      notification-service:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    container_name: hoscorp-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+      - "3443:443"
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - hoscorp-net
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
+
+networks:
+  hoscorp-net:
+    driver: bridge
+    name: hoscorp-net-e6
+
+volumes:
+  backend_data:
+    name: hoscorp-backend-data-e6

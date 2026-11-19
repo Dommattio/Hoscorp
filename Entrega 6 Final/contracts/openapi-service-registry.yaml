@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: Hoscorp Service Discovery & Contract Registry API
+  version: 1.0.0
+  description: >
+    Contrato formal del servidor de Descubrimiento de Servicios (Service Registry) de Hoscorp (Entrega 4 - Modulo 4).
+    Permite el auto-registro dinamico de componentes distribuidos, renovacion de TTL mediante Heartbeats y
+    resolucion dinamica de ubicacion en tiempo de ejecucion con balanceo Round-Robin, eliminando URLs hardcodeadas.
+  contact:
+    name: Grupo 2 - Donato Mattio & Cristian Carilavi
+
+servers:
+  - url: http://localhost:5002
+    description: Acceso local directo al Service Registry
+  - url: http://service-registry:5002
+    description: Acceso interno en red Docker hoscorp-net
+
+paths:
+  /api/v1/registry/register:
+    post:
+      summary: Auto-registrar una instancia de microservicio
+      operationId: registerServiceInstance
+      tags:
+        - ServiceDiscovery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRegistrationInputV1'
+      responses:
+        '201':
+          description: Instancia registrada exitosamente
+        '400':
+          description: Violacion de contrato de registro
+
+  /api/v1/registry/heartbeat/{serviceName}/{instanceId}:
+    put:
+      summary: Renovar TTL de una instancia mediante Heartbeat
+      operationId: sendServiceHeartbeat
+      tags:
+        - ServiceDiscovery
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: instanceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Heartbeat procesado y TTL renovado
+        '404':
+          description: Instancia no encontrada en el registro
+
+  /api/v1/registry/discover/{serviceName}:
+    get:
+      summary: Descubrir y resolver dinamicamente una instancia saludable de un servicio
+      operationId: discoverServiceInstance
+      tags:
+        - ServiceDiscovery
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+            example: notification-service
+      responses:
+        '200':
+          description: Ubicacion y metadatos de contrato resueltos dinamicamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDiscoveryResolutionV1'
+        '404':
+          description: Servicio no registrado
+        '503':
+          description: Ninguna instancia saludable (UP) disponible
+
+  /api/v1/registry/services:
+    get:
+      summary: Obtener el catalogo completo de servicios registrados y metricas de discovery
+      operationId: listRegisteredServices
+      tags:
+        - ServiceDiscovery
+      responses:
+        '200':
+          description: Catalogo de servicios activos e historial de eventos
+
+components:
+  schemas:
+    ServiceRegistrationInputV1:
+      type: object
+      required:
+        - serviceName
+        - instanceId
+        - host
+        - port
+        - contractVersion
+      properties:
+        serviceName:
+          type: string
+          example: notification-service
+        instanceId:
+          type: string
+          example: notification-service-node-01
+        host:
+          type: string
+          example: notification-service
+        port:
+          type: integer
+          example: 5001
+        protocol:
+          type: string
+          example: http
+        contractVersion:
+          type: string
+          example: 1.0.0
+        healthCheckUrl:
+          type: string
+        contractUrl:
+          type: string
+        internalEngine:
+          type: string
+        endpoints:
+          type: object
+        ttlSeconds:
+          type: integer
+          example: 18
+
+    ServiceDiscoveryResolutionV1:
+      type: object
+      required:
+        - status
+        - serviceName
+        - contractVersion
+        - resolvedInstance
+        - resolvedAt
+      properties:
+        status:
+          type: string
+          enum: [RESOLVED]
+        serviceName:
+          type: string
+        contractVersion:
+          type: string
+        totalHealthyInstances:
+          type: integer
+        loadBalancingStrategy:
+          type: string
+          example: Round-Robin
+        resolvedInstance:
+          type: object
+          required:
+            - instanceId
+            - baseUrl
+            - host
+            - port
+          properties:
+            instanceId:
+              type: string
+            baseUrl:
+              type: string
+            host:
+              type: string
+            port:
+              type: integer
+            protocol:
+              type: string
+            healthCheckUrl:
+              type: string
+            contractUrl:
+              type: string
+            internalEngine:
+              type: string
+            endpoints:
+              type: object
+            lookupHits:
+              type: integer
+        resolvedAt:
+          type: string
+          format: date-time

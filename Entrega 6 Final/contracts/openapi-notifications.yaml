@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Hoscorp Notification & Clinical Audit Service API
+  version: 1.0.0
+  description: >
+    Contrato formal de interfaz REST del microservicio de Notificaciones y Auditoria Clinica de Hoscorp (Entrega 4).
+    Expone validacion sincrona de auditoria y consulta de bitacora asincrona (RabbitMQ),
+    garantizando desacople de su motor de almacenamiento interno (v1 Ring Buffer vs v2 Compliance Vault).
+  contact:
+    name: Grupo 2 - Donato Mattio & Cristian Carilavi
+
+servers:
+  - url: http://localhost:5001
+    description: Acceso local directo
+  - url: http://notification-service:5001
+    description: Endpoint descubierto dinamicamente via Service Registry
+
+paths:
+  /api/v1/validate-audit:
+    get:
+      summary: Validar sincronamente la disponibilidad de auditoria para un registro clinico
+      operationId: validateClinicalAudit
+      tags:
+        - AuditValidation
+      parameters:
+        - name: recordId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: rec-1001
+      responses:
+        '200':
+          description: Respuesta conforme a AuditValidationResponseV1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditValidationResponseV1'
+        '400':
+          description: Violacion de contrato (parametro recordId faltante)
+
+  /api/v1/audit-logs:
+    get:
+      summary: Obtener listado de eventos de auditoria adaptados al contrato V1
+      operationId: listAuditLogs
+      tags:
+        - AuditLogs
+      responses:
+        '200':
+          description: Bitacora de eventos normalizada a AuditLogListResponseV1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogListResponseV1'
+    delete:
+      summary: Limpiar bitacora de auditoria en memoria
+      operationId: clearAuditLogs
+      tags:
+        - AuditLogs
+      responses:
+        '200':
+          description: Bitacora reiniciada
+
+  /api/v1/internal/switch-engine:
+    post:
+      summary: Conmutar motor interno del servicio de notificaciones (v1-memory-ring-buffer vs v2-structured-compliance-vault)
+      operationId: switchNotificationEngine
+      tags:
+        - DecouplingVerification
+      responses:
+        '200':
+          description: Motor interno cambiado sin romper el contrato hacia los consumidores
+
+components:
+  schemas:
+    AuditValidationResponseV1:
+      type: object
+      required:
+        - contractVersion
+        - status
+        - service
+        - instanceId
+        - recordId
+        - timestamp
+        - auditReady
+        - message
+      properties:
+        contractVersion:
+          type: string
+          example: 1.0.0
+        status:
+          type: string
+          enum: [VALIDATED]
+        service:
+          type: string
+          example: hoscorp-notification-service
+        instanceId:
+          type: string
+          example: notification-service-node-01
+        recordId:
+          type: string
+          example: rec-1001
+        timestamp:
+          type: string
+          format: date-time
+        auditReady:
+          type: boolean
+          example: true
+        internalEngineActive:
+          type: string
+        message:
+          type: string
+
+    AuditLogEntryV1:
+      type: object
+      required:
+        - id
+        - eventId
+        - routingKey
+        - sourceNode
+        - eventTimestamp
+        - consumedAt
+        - actionDescription
+        - simulatedAction
+        - payload
+      properties:
+        id:
+          type: string
+        eventId:
+          type: string
+        routingKey:
+          type: string
+        sourceNode:
+          type: string
+        eventTimestamp:
+          type: string
+          format: date-time
+        consumedAt:
+          type: string
+          format: date-time
+        actionDescription:
+          type: string
+        simulatedAction:
+          type: string
+        payload:
+          type: object
+
+    AuditLogListResponseV1:
+      type: object
+      required:
+        - contractVersion
+        - node
+        - totalCount
+        - channel
+        - logs
+      properties:
+        contractVersion:
+          type: string
+          example: 1.0.0
+        node:
+          type: string
+        instanceId:
+          type: string
+        internalEngineActive:
+          type: string
+        totalCount:
+          type: integer
+        channel:
+          type: string
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogEntryV1'

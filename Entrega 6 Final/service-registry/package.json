@@ -1,0 +1,13 @@
+{
+  "name": "hoscorp-service-registry",
+  "version": "1.0.0",
+  "description": "Hoscorp Service Discovery, Load Balancing and Horizontal Scaling Registry - Entrega 6 Final",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

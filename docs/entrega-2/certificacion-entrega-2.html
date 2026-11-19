@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificación de Entrega - Entrega 2: Infraestructura</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 20mm 18mm 20mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      background: #f3f4f6;
+      line-height: 1.35;
+      font-size: 11pt;
+    }
+
+    .page {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 22mm 22mm;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+
+    .print-bar {
+      max-width: 210mm;
+      margin: 15px auto 0 auto;
+      padding: 10px 20px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .print-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Header styling */
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .cert-title {
+      font-size: 19pt;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .page-number {
+      font-size: 9.5pt;
+      color: #6b7280;
+    }
+
+    .delivery-title {
+      font-size: 17pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 2px;
+    }
+
+    .module-subtitle {
+      font-size: 11.5pt;
+      font-style: italic;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .separator {
+      border-bottom: 2px solid #1e3a8a;
+      margin-bottom: 16px;
+    }
+
+    /* Purpose Box */
+    .objective-text {
+      font-size: 10pt;
+      color: #1f2937;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .eval-box {
+      background-color: #fef9c3;
+      border: 1px solid #facc15;
+      padding: 10px 14px;
+      font-size: 9.5pt;
+      margin-bottom: 18px;
+      border-radius: 2px;
+    }
+
+    .eval-box strong {
+      color: #854d0e;
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #111827;
+      border-bottom: 1.5px solid #111827;
+      padding-bottom: 3px;
+      margin-bottom: 12px;
+    }
+
+    /* General Data */
+    .data-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      row-gap: 6px;
+      font-size: 10pt;
+      margin-bottom: 20px;
+    }
+
+    .data-label {
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .data-value {
+      color: #111827;
+      border-bottom: 1px dotted #9ca3af;
+      padding-bottom: 2px;
+    }
+
+    /* Checklist Table */
+    table.checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+      margin-bottom: 20px;
+    }
+
+    table.checklist-table th, 
+    table.checklist-table td {
+      border: 1px solid #d1d5db;
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+
+    table.checklist-table th {
+      background-color: #f0fdf4;
+      color: #166534;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    table.checklist-table th:nth-child(2) {
+      width: 80px;
+      text-align: center;
+    }
+
+    table.checklist-table td:nth-child(2) {
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .box-checked {
+      display: inline-block;
+      font-size: 11pt;
+      color: #15803d;
+      margin-right: 2px;
+    }
+
+    .evidence-text {
+      color: #374151;
+      line-height: 1.35;
+    }
+
+    /* Additional Evidence */
+    .evidence-prompt {
+      font-size: 9.5pt;
+      color: #374151;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .evidence-box {
+      border: 1px dashed #9ca3af;
+      background: #fafafa;
+      padding: 10px 12px;
+      font-size: 9.5pt;
+      color: #1e3a8a;
+      min-height: 48px;
+      border-radius: 4px;
+    }
+
+    /* Page Footer */
+    .page-footer {
+      position: absolute;
+      bottom: 16mm;
+      left: 22mm;
+      right: 22mm;
+      text-align: center;
+      font-size: 8.5pt;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 8px;
+    }
+
+    /* Page 2 Styles */
+    .teacher-box {
+      border: 1px dashed #9ca3af;
+      background: #fafafa;
+      min-height: 180px;
+      padding: 14px;
+      color: #6b7280;
+      font-style: italic;
+      font-size: 10pt;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-bar no-print">
+    <span>Certificación Oficial de Entrega 2 — Hoscorp (Grupo 2)</span>
+    <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+  </div>
+
+  <!-- PÁGINA 1 -->
+  <div class="page">
+    <div class="header-top">
+      <div class="cert-title">Certificación de Entrega</div>
+      <div class="page-number">Programación Distribuida y Componentes · Proyecto Final — 1</div>
+    </div>
+    <div class="delivery-title">Entrega 2: Infraestructura</div>
+    <div class="module-subtitle">Módulo 2 — Arquitectura de infraestructura</div>
+    <div class="separator"></div>
+
+    <div class="objective-text">
+      El objetivo de esta entrega es tener un esqueleto real con al menos dos nodos separados (contenedores o 
+      procesos), no una maqueta visual. El grupo debe poder mostrar que ambos nodos corren de forma 
+      independiente y justificar el modelo de ejecución elegido.
+    </div>
+
+    <div class="eval-box">
+      <strong>Qué evalúa esta entrega:</strong> Que la separación física entre nodos sea real y justificada, no interfaces sin backend.
+    </div>
+
+    <div class="section-title">Datos generales</div>
+    <div class="data-grid">
+      <div class="data-label">Grupo N°:</div>
+      <div class="data-value">Grupo 2 (Donato Mattio & Cristian Carilavi) — Hoscorp</div>
+
+      <div class="data-label">Tag / Release de esta entrega:</div>
+      <div class="data-value">v1-infraestructura</div>
+
+      <div class="data-label">Fecha de entrega:</div>
+      <div class="data-value">14/10/2026</div>
+    </div>
+
+    <div class="section-title">Checklist de la entrega</div>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th style="width: 42%;">Requisito de la entrega</th>
+          <th>Cumple</th>
+          <th>Justificación breve / evidencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hay al menos dos nodos separados funcionando (contenedores o procesos distintos).</strong></td>
+          <td><strong>[X] Sí</strong><br>[ ] No</td>
+          <td class="evidence-text">
+            Dos contenedores Docker independientes: <strong>Nodo 1 (Backend API)</strong> con Node.js en puerto 5000 y <strong>Nodo 2 (Frontend)</strong> con Nginx en puerto 3000. Cada uno posee su propio Dockerfile, PID namespace y stack de red.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>La separación es real: cada nodo puede iniciarse/detenerse de forma independiente.</strong></td>
+          <td><strong>[X] Sí</strong><br>[ ] No</td>
+          <td class="evidence-text">
+            Cada contenedor puede iniciarse o detenerse de forma autónoma (<code>docker compose stop backend</code>). Al detener el backend, el frontend permanece activo con alerta en tiempo real. Al detener el frontend, el backend continúa respondiendo solicitudes REST.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Se identificó el modelo de ejecución elegido (cliente-servidor / P2P / microservicios).</strong></td>
+          <td><strong>[X] Sí</strong><br>[ ] No</td>
+          <td class="evidence-text">
+            Modelo <strong>Cliente-Servidor Distribuido / Microservicios</strong> orientados a dominio, comunicados a través de una red virtual tipo bridge (<code>hoscorp-net</code>) con Reverse Proxy HTTP/REST.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>El modelo de ejecución elegido está justificado en función del caso de uso.</strong></td>
+          <td><strong>[X] Sí</strong><br>[ ] No</td>
+          <td class="evidence-text">
+            En un sistema de historias clínicas unificadas (Hoscorp), la separación física es mandatoria para resguardar la privacidad y soberanía de los datos de salud, aislando la lógica de persistencia clínica del cliente web de consulta.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>El README explica cómo levantar el entorno localmente (paso a paso).</strong></td>
+          <td><strong>[X] Sí</strong><br>[ ] No</td>
+          <td class="evidence-text">
+            El archivo <code>README.md</code> detalla paso a paso los requisitos, comandos de despliegue con Docker Compose, verificación de endpoints y scripts interactivos de prueba.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Evidencia adicional</div>
+    <div class="evidence-prompt">
+      Apuntar la URL para acceder a la URL para visualizar la info de esta entrega. Informe descriptivo y técnico correspondiente.
+    </div>
+    <div class="evidence-box">
+      <strong>Informe Técnico y Código:</strong> <a href="./informe-tecnico-infraestructura.md">docs/informe-tecnico-infraestructura.md</a><br>
+      <strong>Frontend en vivo:</strong> <code>http://localhost:3000</code> | <strong>Backend API:</strong> <code>http://localhost:5000/health</code><br>
+      <strong>Repositorio / Tag:</strong> <code>https://github.com/usuario/hoscorp</code> (Tag: <code>v1-infraestructura</code>)
+    </div>
+
+    <div class="page-footer">
+      Programación Distribuida y Componentes · Proyecto Final — 1
+    </div>
+  </div>
+
+  <!-- PÁGINA 2 -->
+  <div class="page">
+    <div class="header-top">
+      <div class="cert-title">Certificación de Entrega</div>
+      <div class="page-number">Programación Distribuida y Componentes · Proyecto Final — 2</div>
+    </div>
+    <div class="delivery-title" style="font-size: 14pt; margin-top: 4px;">Espacio para el docente</div>
+    <div class="separator"></div>
+
+    <div class="data-grid" style="margin-top: 20px;">
+      <div class="data-label">Nota:</div>
+      <div class="data-value">_____ / 10</div>
+
+      <div class="data-label">Corregido por:</div>
+      <div class="data-value">Completar</div>
+
+      <div class="data-label">Fecha de corrección:</div>
+      <div class="data-value">dd/mm/aaaa</div>
+    </div>
+
+    <div class="section-title" style="margin-top: 30px;">Observaciones:</div>
+    <div class="teacher-box">
+      Espacio para comentarios del docente
+    </div>
+
+    <div class="page-footer">
+      Programación Distribuida y Componentes · Proyecto Final — 2
+    </div>
+  </div>
+
+</body>
+</html>
