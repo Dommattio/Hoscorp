@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificacion de Entrega - Entrega 5: Seguridad y confiabilidad</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 20mm 18mm 20mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      background: #f3f4f6;
+      line-height: 1.35;
+      font-size: 11pt;
+    }
+
+    .page {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 22mm 22mm;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+
+    .print-bar {
+      max-width: 210mm;
+      margin: 15px auto 0 auto;
+      padding: 10px 20px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .print-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .course-title {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .page-number {
+      font-size: 9.5pt;
+      color: #4b5563;
+    }
+
+    .cert-title {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 10px;
+      line-height: 1.25;
+    }
+
+    .module-subtitle {
+      font-size: 12pt;
+      font-style: italic;
+      color: #3b82f6;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #1e3a8a;
+      margin: 10px 0 14px 0;
+    }
+
+    .description-text {
+      font-size: 9.5pt;
+      color: #374151;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .eval-box {
+      background-color: #fefce8;
+      border: 1px solid #ca8a04;
+      border-radius: 2px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 9pt;
+      color: #854d0e;
+      line-height: 1.35;
+    }
+
+    .eval-box strong {
+      color: #713f12;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-size: 9pt;
+    }
+
+    .data-table td {
+      padding: 4px 0;
+      border-bottom: 1px dotted #9ca3af;
+    }
+
+    .data-label {
+      width: 28%;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .data-value {
+      width: 72%;
+      color: #111827;
+    }
+
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      font-size: 8.4pt;
+    }
+
+    .checklist-table th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .checklist-table td {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+      line-height: 1.3;
+    }
+
+    .col-req {
+      width: 31%;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .col-check {
+      width: 12%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .col-just {
+      width: 57%;
+      color: #334155;
+    }
+
+    .checkbox-box {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid #1e3a8a;
+      margin-right: 3px;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 11px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .checkbox-checked {
+      background-color: #1e3a8a;
+      color: #fff;
+    }
+
+    .evidence-box {
+      border: 1px dashed #94a3b8;
+      background-color: #f8fafc;
+      padding: 9px 12px;
+      border-radius: 4px;
+      font-size: 8.4pt;
+      line-height: 1.38;
+      color: #334155;
+      margin-top: 5px;
+    }
+
+    .evidence-box code {
+      font-family: 'JetBrains Mono', Courier, monospace;
+      background: #e2e8f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 7.9pt;
+      color: #0f172a;
+    }
+
+    .page-footer {
+      position: absolute;
+      bottom: 16mm;
+      left: 22mm;
+      right: 22mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+    }
+
+    .docente-box {
+      border: 1px dashed #94a3b8;
+      background-color: #fafafa;
+      min-height: 160px;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      color: #6b7280;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-bar no-print">
+    <div>
+      <strong>Certificacion Oficial de Entrega 5</strong> - Lista para imprimir o guardar como PDF
+    </div>
+    <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF (Ctrl + P)</button>
+  </div>
+
+  <!-- ==================== PAGINA 1 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes · Proyecto Final</span>
+      <span class="page-number">Pagina 1</span>
+    </div>
+
+    <h1 class="cert-title">Certificacion de Entrega — Entrega 5: Seguridad y confiabilidad</h1>
+    <h2 class="module-subtitle">Modulo 5 — Seguridad y confiabilidad en entornos distribuidos</h2>
+
+    <hr class="divider">
+
+    <p class="description-text">
+      Esta entrega agrega autenticacion y autorizacion de usuarios, cifrado de la comunicacion en transito, y un mecanismo de replicacion o recuperacion ante fallos, junto con un informe corto de amenazas consideradas.
+    </p>
+
+    <div class="eval-box">
+      <strong>Que evalua esta entrega:</strong> Que el grupo haya pensado que pasa cuando algo falla o es atacado, no solo el camino feliz.
+    </div>
+
+    <h3 class="section-title">Datos generales</h3>
+    <table class="data-table">
+      <tr>
+        <td class="data-label">Grupo N°:</td>
+        <td class="data-value"><strong>Grupo 2</strong> (Donato Mattio &amp; Cristian Carilavi)</td>
+      </tr>
+      <tr>
+        <td class="data-label">Tag / Release de esta entrega:</td>
+        <td class="data-value"><code>v1-seguridad</code></td>
+      </tr>
+      <tr>
+        <td class="data-label">Fecha de entrega:</td>
+        <td class="data-value">19/11/2026</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Checklist de la entrega</h3>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th class="col-req">Requisito de la entrega</th>
+          <th class="col-check">Cumple</th>
+          <th class="col-just">Justificacion breve / evidencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-req">Hay autenticacion de usuarios implementada.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Implementada mediante <strong>JWT (HMAC-SHA256 / HS256)</strong> en <code>POST /api/v1/auth/login</code> con validacion de contraseñas hasheadas con SHA-256 (<code>dra.gomez</code>, <code>carlos.gomez</code>, <code>admin.hoscorp</code>). Las peticiones sin token Bearer valido son rechazadas con <strong>HTTP 401 Unauthorized</strong>.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Hay autorizacion / control de acceso implementado (no todos los usuarios pueden todo).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Middleware <strong>RBAC</strong> con 3 roles diferenciados: <strong><code>MEDICO</code></strong> (puede crear y editar historias clinicas), <strong><code>PACIENTE</code></strong> (restringido a Solo Lectura; si intenta crear o editar recibe <strong>HTTP 403 Forbidden</strong> y se audita el intento en RabbitMQ) y <strong><code>ADMIN_AUDITOR</code></strong>.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">La comunicacion entre componentes esta cifrada en transito (HTTPS/TLS).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Certificados <strong>X.509 v3 RSA-2048 SHA-256</strong> integrados en <code>certs/hoscorp.crt</code>. El Gateway Nginx expone <strong>HTTPS/TLS 1.3 en el puerto 3443</strong> y el tramo inter-componente hacia el Backend viaja cifrado sobre TLS a <code>https://backend:5443</code>. Verificable en <code>/api/v1/security/tls-status</code>.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Hay un mecanismo de replicacion o recuperacion ante fallos implementado y probado.</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            <strong>Replicacion Sincrona en Espejo</strong> (<code>records.replica.json</code> + manifiesto <code>SHA-256</code>) con <strong>Auto-Recuperacion (Self-Healing RPO=0, RTO&lt;50ms)</strong> ante corrupcion o perdida del primario, mas <strong>Failover automatico</strong> hacia la instancia replica (<code>notification-service-replica-02</code>) en el Service Registry.
+          </td>
+        </tr>
+        <tr>
+          <td class="col-req">Se incluyo un informe corto de amenazas consideradas (que se protegio y de que).</td>
+          <td class="col-check">
+            <span class="checkbox-box checkbox-checked">X</span> Si &nbsp;
+            <span class="checkbox-box"></span> No
+          </td>
+          <td class="col-just">
+            Incluido en <code>docs/informe-amenazas-y-recuperacion.md</code> bajo la metodologia <strong>STRIDE</strong>, detallando para cada activo critico (historias clinicas, red, identidad y disponibilidad) que amenaza se mitigo y con que control verificable.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-title">Evidencia adicional</h3>
+    <p style="font-size: 8.5pt; font-weight: 600; color: #1f2937;">Link al informe de amenazas y a la prueba de recuperacion ante fallos.</p>
+    <div class="evidence-box">
+      <strong>1. Informe de Amenazas (STRIDE) y Prueba de Recuperacion:</strong> <code>Entrega 5/docs/informe-amenazas-y-recuperacion.md</code><br>
+      <strong>2. Script Automatizado de Seguridad y Recuperacion:</strong> Ejecutar <code>.\scripts\test-seguridad-confiabilidad.ps1</code> o <code>node .\scripts\test-seguridad-confiabilidad.js</code>.<br>
+      <strong>3. Portal Web Cifrado (HTTPS/TLS) y Laboratorio en Vivo:</strong> <a href="https://localhost:3443" style="color: #0284c7;">https://localhost:3443</a> (o <a href="http://localhost:3000" style="color: #0284c7;">http://localhost:3000</a>) -&gt; Boton <em>"Simular Fallo / Corrupcion Catastrofica y Ejecutar Auto-Recuperacion"</em>.
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes · Proyecto Final — 1</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGINA 2 ==================== -->
+  <div class="page">
+    <div class="header-top">
+      <span class="course-title">Programacion Distribuida y Componentes · Proyecto Final</span>
+      <span class="page-number">Pagina 2</span>
+    </div>
+
+    <h2 class="section-title" style="font-size: 13pt; margin-top: 10px; color: #1e3a8a;">Espacio para el docente</h2>
+    <hr class="divider">
+
+    <table class="data-table" style="margin-top: 15px; margin-bottom: 20px;">
+      <tr>
+        <td class="data-label" style="width: 30%;">Nota:</td>
+        <td class="data-value">________ / 10</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Corregido por:</td>
+        <td class="data-value">Completar</td>
+      </tr>
+      <tr>
+        <td class="data-label" style="width: 30%;">Fecha de correccion:</td>
+        <td class="data-value">dd/mm/aaaa</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Observaciones:</h3>
+    <div class="docente-box">
+      Espacio para comentarios del docente
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px dotted #cbd5e1; padding-top: 15px; font-size: 8.5pt; color: #64748b;">
+      <p><strong>Resumen de artefactos tecnicos provistos para evaluacion (Entrega 5):</strong></p>
+      <ul style="margin-left: 18px; margin-top: 6px; line-height: 1.5;">
+        <li><code>certs/hoscorp.crt</code> y <code>hoscorp.key</code>: Certificado X.509 v3 RSA-2048 SHA-256 para cifrado HTTPS/TLS 1.3 en Gateway (:3443) y Backend (:5443).</li>
+        <li><code>backend/src/server.js</code>: Autenticacion JWT (HS256), Middleware RBAC (MEDICO, PACIENTE, ADMIN_AUDITOR) y Motor de Replicacion en Espejo con Auto-Recuperacion (Self-Healing RPO=0).</li>
+        <li><code>service-registry/src/server.js</code> y <code>notification-service/src/server.js</code>: Registro de instancias Primaria y Replica con Failover automatico.</li>
+        <li><code>docs/informe-amenazas-y-recuperacion.md</code>: Modelo de amenazas STRIDE y documentacion de la prueba de recuperacion.</li>
+        <li><code>scripts/test-seguridad-confiabilidad.ps1</code>: Script automatizado que valida los 5 puntos de la entrega.</li>
+      </ul>
+    </div>
+
+    <div class="page-footer">
+      <span>Hoscorp - Proyecto Final</span>
+      <span>Programacion Distribuida y Componentes · Proyecto Final — 2</span>
+    </div>
+  </div>
+
+</body>
+</html>
